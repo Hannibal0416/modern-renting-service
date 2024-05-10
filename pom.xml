@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.2.5</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
+  <groupId>com.cdk.modern.renting</groupId>
+  <artifactId>modern-renting-service</artifactId>
+  <version>0.0.1</version>
+  <packaging>pom</packaging>
+  <name>modern-renting-service</name>
+  <description>Modern Renting Service</description>
+  <properties>
+    <java.version>21</java.version>
+    <spring-cloud.version>2023.0.1</spring-cloud.version>
+    <spock-spring.version>2.4-M4-groovy-4.0</spock-spring.version>
+    <groovy-all.version>4.0.21</groovy-all.version>
+    <gmavenplus-plugin.version>3.0.2</gmavenplus-plugin.version>
+    <pitest-maven.version>1.16.1</pitest-maven.version>
+    <spock-reports.version>2.5.1-groovy-4.0</spock-reports.version>
+    <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
+    <google-java-format.version>1.22.0</google-java-format.version>
+  </properties>
+
+  <modules>
+    <module>user-service</module>
+    <module>vehicle-service</module>
+    <module>rental-service</module>
+    <module>oauth2</module>
+    <module>payment-consumer</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.spockframework</groupId>
+        <artifactId>spock-spring</artifactId>
+        <version>${spock-spring.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.groovy</groupId>
+        <artifactId>groovy-all</artifactId>
+        <version>${groovy-all.version}</version>
+        <type>pom</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.athaydes</groupId>
+        <artifactId>spock-reports</artifactId>
+        <version>${spock-reports.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <configuration>
+            <excludes>
+              <exclude>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+              </exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+        <plugin>
+          <!-- The gmavenplus plugin is used to compile Groovy code. To learn more about this plugin,
+          visit https://github.com/groovy/GMavenPlus/wiki -->
+          <groupId>org.codehaus.gmavenplus</groupId>
+          <artifactId>gmavenplus-plugin</artifactId>
+          <version>${gmavenplus-plugin.version}</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>compile</goal>
+                <goal>compileTests</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.pitest</groupId>
+          <artifactId>pitest-maven</artifactId>
+          <version>${pitest-maven.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>${spotless-maven-plugin.version}</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>check</goal>
+                <goal>apply</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <java>
+              <includes>
+                <include>src/main/java/**/*.java</include> <!-- Check application code -->
+                <include>src/test/java/**/*.java</include> <!-- Check application tests code -->
+              </includes>
+              <googleJavaFormat>
+                <version>${google-java-format.version}</version>
+                <!--							<style>AOSP</style>-->
+              </googleJavaFormat>
+              <importOrder/> <!-- standard import order -->
+              <removeUnusedImports/> <!-- self-explanatory -->
+            </java>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+  </build>
+
+
+</project>
