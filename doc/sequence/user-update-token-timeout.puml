@@ -1,0 +1,71 @@
+@startuml
+skinparam backgroundColor #EEEBDC
+skinparam handwritten false
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+actor User
+participant "Frontend App" as Frontend
+participant "User Service" as UserService
+participant "OAuth2 Server" as OAuth
+
+autonumber 1.1
+User -> Frontend: update user info
+activate Frontend
+
+Frontend -> UserService: PUT /users(token, userInfo)
+activate UserService
+
+UserService -> OAuth: POST /oauth2/introspection(token)
+activate OAuth
+OAuth --> UserService: response(active:false)
+deactivate OAuth
+
+UserService --> Frontend: response 401(token invalidate)
+deactivate UserService
+alt successful case
+  autonumber inc A
+  Frontend -> UserService: refresh(refreshToken)
+  activate UserService
+
+  UserService -> OAuth: POST grant_type:refresh_token token(refreshToken)
+  activate OAuth
+
+
+  OAuth --> UserService: response(token, refresh-token)
+
+  UserService --> Frontend: response(token, refresh-token)
+
+  Frontend -> UserService: PUT /users(token, userInfo)
+  activate UserService
+  UserService -> OAuth: POST /oauth2/introspection(token)
+  activate OAuth
+  OAuth --> UserService: response(active:true)
+
+  UserService -> OAuth: PUT /users(token, userInfo)
+
+  OAuth --> UserService: response(userInfo)
+  deactivate OAuth
+  UserService --> Frontend: response (userinfo)
+  deactivate UserService
+  Frontend --> User: response (userinfo)
+
+else failure case (refreshToken has expired)
+  autonumber inc A
+  Frontend -> UserService: refresh(refreshToken)
+  activate UserService
+
+  UserService -> OAuth: POST grant_type:refresh_token token(refreshToken)
+  activate OAuth
+  OAuth --> UserService: response 400
+  deactivate OAuth
+
+  UserService --> Frontend: response 400
+  deactivate UserService
+
+  Frontend --> User: Redirect to Login page
+  deactivate Frontend
+end
+@enduml

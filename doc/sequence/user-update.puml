@@ -1,0 +1,35 @@
+@startuml
+skinparam backgroundColor #EEEBDC
+skinparam handwritten false
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+actor User
+participant "Frontend App" as Frontend
+participant "User Service" as UserService
+participant "OAuth2 Server" as OAuth
+
+autonumber 1
+User -> Frontend: update user info
+activate Frontend
+
+Frontend -> UserService: PUT /users(token, userInfo)
+activate UserService
+
+UserService -> OAuth: POST /oauth/introspect(token)
+activate OAuth
+OAuth --> UserService: Response(active:true)
+
+UserService -> OAuth: PUT /users(userInfo)
+
+OAuth --> UserService: Response(userInfo)
+deactivate OAuth
+
+UserService --> Frontend: Response 201
+deactivate UserService
+
+Frontend --> User: Done
+deactivate Frontend
+@enduml

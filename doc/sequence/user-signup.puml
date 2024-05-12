@@ -1,0 +1,31 @@
+@startuml
+skinparam backgroundColor #EEEBDC
+skinparam handwritten false
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+actor User
+participant "Frontend App" as Frontend
+participant "User Service" as UserService
+participant "OAuth2 Server" as OAuth
+
+autonumber 1
+User -> Frontend: Sign up
+activate Frontend
+
+Frontend -> UserService: POST /users(userInfo)
+activate UserService
+
+UserService -> OAuth: POST /users(userInfo)
+activate OAuth
+OAuth --> UserService: Response 201
+deactivate OAuth
+
+UserService --> Frontend: Response 201
+deactivate UserService
+
+Frontend --> User: Redirect to login page
+deactivate Frontend
+@enduml
