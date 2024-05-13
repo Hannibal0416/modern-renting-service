@@ -9,4 +9,5 @@ public interface UserService {
 
   UserInfoResponse updateUser(UserUpdate userUpdate);
   TokenResponse refresh(String token);
+  void revoke(String token);
 }

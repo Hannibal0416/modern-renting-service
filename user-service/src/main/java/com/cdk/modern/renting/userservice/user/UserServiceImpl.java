@@ -36,11 +36,21 @@ public class UserServiceImpl implements UserService{
     MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
 //    map.add("grant_type", "grant_password");
     map.add("grant_type", "refresh_token");
-    map.add("token", token);
+    map.add("refresh_token", token);
 
     HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
     ResponseEntity<TokenResponse> response = restTemplate.postForEntity( oAuth2Properties.getTokenUri(), request , TokenResponse.class );
     return response.getBody();
+  }
+
+  @Override
+  public void revoke(String token) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+    map.add("token", token);
+    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+    restTemplate.postForEntity( oAuth2Properties.getRevoke(), request , Void.class );
   }
 }

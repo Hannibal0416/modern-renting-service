@@ -35,6 +35,11 @@ public class UserController {
     return new TokenResponse();
   }
 
+  @GetMapping("/revoke/{token}")
+  public void revoke(@PathVariable String token) {
+    userService.revoke(token);
+  }
+
   @GetMapping("/refresh/{token}")
   public TokenResponse loginUser(@PathVariable String token) {
     return userService.refresh(token);
