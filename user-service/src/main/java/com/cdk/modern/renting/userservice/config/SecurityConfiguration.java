@@ -3,11 +3,13 @@ package com.cdk.modern.renting.userservice.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
@@ -31,7 +33,7 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(
             authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
-                    .anyRequest().authenticated()
+                    .anyRequest().permitAll()
         );
 
         return http.build();
@@ -40,5 +42,12 @@ public class SecurityConfiguration {
     @Bean
     public OpaqueTokenAuthenticationConverter opaqueTokenAuthenticationConverter() {
         return new CustomOpaqueTokenAuthenticationConverter();
+    }
+
+    @Bean
+    public RestTemplate restTemplate(OAuth2Properties oAuth2Properties) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(oAuth2Properties.getClientId(), oAuth2Properties.getClientSecret()));
+        return restTemplate;
     }
 }

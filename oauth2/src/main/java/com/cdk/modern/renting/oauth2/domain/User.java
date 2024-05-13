@@ -38,13 +38,9 @@ public class User implements Serializable {
 
 	private String password;
 
-	private String firstName;
+	private String email;
 
-	private String middleName;
-
-	private String lastName;
-
-	private String locale;
+	private String phone;
 
 	private String avatarUrl;
 

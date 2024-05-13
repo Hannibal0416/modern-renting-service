@@ -3,7 +3,7 @@ server:
 
 oauth2:
   clientId: modern-renting-client
-  clientSecret: "{noop}modern-renting-secret"
+  clientSecret: "modern-renting-secret"
   introspectionUri: http://localhost:9000/oauth2/introspect
 
 spring:

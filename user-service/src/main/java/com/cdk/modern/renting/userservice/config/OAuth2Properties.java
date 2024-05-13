@@ -14,5 +14,7 @@ public class OAuth2Properties {
     private String clientSecret;
 
     private String introspectionUri;
+
+    private String tokenUri;
   
 } 

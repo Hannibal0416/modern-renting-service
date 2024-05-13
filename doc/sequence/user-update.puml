@@ -27,7 +27,7 @@ UserService -> OAuth: PUT /users/{username}(username,userInfo)
 OAuth --> UserService: Response(userInfo)
 deactivate OAuth
 
-UserService --> Frontend: Response 201
+UserService --> Frontend: Response(userInfo)
 deactivate UserService
 
 Frontend --> User: Done

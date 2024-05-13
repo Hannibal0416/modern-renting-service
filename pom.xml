@@ -50,6 +50,7 @@
     <h2.version>2.2.224</h2.version>
     <liquibase.version>4.27.0</liquibase.version>
     <oauth2-oidc-sdk.version>11.10.1</oauth2-oidc-sdk.version>
+    <springdoc-openapi.version>2.5.0</springdoc-openapi.version>
   </properties>
 
   <modules>
@@ -104,7 +105,11 @@
         <artifactId>oauth2-oidc-sdk</artifactId>
         <version>${oauth2-oidc-sdk.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        <version>${springdoc-openapi.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
