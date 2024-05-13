@@ -2,8 +2,8 @@ server:
   port: 8082
 
 oauth2:
-  clientId: modern-renting-client
-  clientSecret: "modern-renting-secret"
+  clientId: service-client
+  clientSecret: "service-secret"
   introspectionUri: http://localhost:9000/oauth2/introspect
 
 spring:

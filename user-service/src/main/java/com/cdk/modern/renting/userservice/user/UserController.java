@@ -33,20 +33,10 @@ public class UserController {
 
   private final UserService userService;
 
-  @PostMapping("/login")
-  public TokenResponse login(UserLoginRequest userLoginRequest) {
-    return new TokenResponse();
-  }
 
-  @GetMapping("/logout")
-  public void logout(@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken) {
-    bearerToken = bearerToken.replace("Bearer ","");
-    userService.revoke(bearerToken);
-  }
-
-  @GetMapping("/refresh/{token}")
-  public TokenResponse loginUser(@PathVariable String token) {
-    return userService.refresh(token);
+  @GetMapping
+  public UserInfoResponse getUser() {
+    return new UserInfoResponse();
   }
 
   @PostMapping

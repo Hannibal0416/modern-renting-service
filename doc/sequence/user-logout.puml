@@ -8,23 +8,16 @@ skinparam sequenceParticipant underline
 
 actor User
 participant "Frontend App" as Frontend
-participant "User Service" as UserService
 participant "OAuth2 Server" as OAuth
 
 autonumber 1
 User -> Frontend: Log out
 activate Frontend
 
-Frontend -> UserService: Log out Request
-activate UserService
-
-UserService -> OAuth: POST /oauth/revoke(token)
+Frontend -> OAuth: POST /oauth/revoke(token, clientId, clientSecret)
 activate OAuth
-OAuth --> UserService: response 200
+OAuth --> Frontend: response 200
 deactivate OAuth
-
-UserService --> Frontend: response200
-deactivate UserService
 
 Frontend --> User: Log out
 deactivate Frontend

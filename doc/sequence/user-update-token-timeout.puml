@@ -27,16 +27,12 @@ UserService --> Frontend: response 401(token invalidate)
 deactivate UserService
 alt successful case
   autonumber inc A
-  Frontend -> UserService: refresh(refreshToken)
-  activate UserService
-
-  UserService -> OAuth: POST grant_type:refresh_token token(refreshToken)
+  Frontend -> OAuth:POST grant_type:refresh_token token(refreshToken, clientId, clientSecret)
   activate OAuth
 
 
-  OAuth --> UserService: response(token, refresh-token)
-
-  UserService --> Frontend: response(token, refresh-token)
+  OAuth --> Frontend: response(token, refresh-token)
+  deactivate OAuth
 
   Frontend -> UserService: PUT /users(token, userInfo)
   activate UserService
@@ -44,9 +40,7 @@ alt successful case
   activate OAuth
   OAuth --> UserService: response(active:true, username)
 
-  UserService -> OAuth: PUT /users/{username}(username, userInfo)
 
-  OAuth --> UserService: response(userInfo)
   deactivate OAuth
   UserService --> Frontend: response (userinfo)
   deactivate UserService
@@ -54,16 +48,11 @@ alt successful case
 
 else failure case (refreshToken has expired)
   autonumber inc A
-  Frontend -> UserService: refresh(refreshToken)
-  activate UserService
-
-  UserService -> OAuth: POST grant_type:refresh_token token(refreshToken)
+  Frontend -> OAuth:POST grant_type:refresh_token token(refreshToken, clientId, clientSecret)
   activate OAuth
-  OAuth --> UserService: response 400
-  deactivate OAuth
 
-  UserService --> Frontend: response 400
-  deactivate UserService
+  OAuth --> Frontend: response 400
+  deactivate OAuth
 
   Frontend --> User: Redirect to Login page
   deactivate Frontend

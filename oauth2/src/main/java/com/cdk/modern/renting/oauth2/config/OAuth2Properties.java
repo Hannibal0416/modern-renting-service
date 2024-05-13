@@ -12,5 +12,9 @@ public class OAuth2Properties {
     private String clientId;
 
     private String clientSecret;
+
+    private String svcClientId;
+
+    private String svcClientSecret;
   
 } 

@@ -94,7 +94,7 @@ public class AuthorizationServerConfiguration {
 
     @Bean
     public RegisteredClientRepository registeredClientRepository(OAuth2Properties oAuth2Properties) {
-        RegisteredClient demoClient = RegisteredClient.withId(UUID.randomUUID().toString())
+        RegisteredClient modernRentingClient = RegisteredClient.withId(UUID.randomUUID().toString())
             .clientName("Modern Renting client")
             .clientId(oAuth2Properties.getClientId())
 
@@ -117,6 +117,29 @@ public class AuthorizationServerConfiguration {
             )
             .build();
 
-        return new InMemoryRegisteredClientRepository(demoClient);
+        RegisteredClient serviceClient = RegisteredClient.withId(UUID.randomUUID().toString())
+            .clientName("Modern Renting client")
+            .clientId(oAuth2Properties.getClientId()+"2")
+
+            // {noop} means "no operation," i.e., a raw password without any encoding applied.
+            .clientSecret(oAuth2Properties.getClientSecret()+"2")
+
+            .redirectUri("http://localhost:8080/")
+            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+            .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+            .authorizationGrantType(AuthorizationGrantTypePassword.GRANT_PASSWORD)
+            .tokenSettings(
+                TokenSettings.builder()
+                    .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
+                    .accessTokenTimeToLive(Duration.ofMinutes(300))
+                    .refreshTokenTimeToLive(Duration.ofMinutes(600))
+                    .authorizationCodeTimeToLive(Duration.ofMinutes(20))
+                    .reuseRefreshTokens(false)
+                    .build()
+            )
+            .build();
+
+        return new InMemoryRegisteredClientRepository(modernRentingClient,serviceClient);
     }
 }

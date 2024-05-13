@@ -4,6 +4,8 @@ server:
 oauth2:
   clientId: modern-renting-client
   clientSecret: "{noop}modern-renting-secret"
+  svcClientId: service-client
+  svcClientSecret: "{noop}service-secret"
 
 spring:
   application:
