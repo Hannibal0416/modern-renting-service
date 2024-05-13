@@ -1,13 +1,13 @@
 package com.cdk.modern.renting.userservice.user;
 
 
-import com.cdk.modern.renting.userservice.user.request.UserUpdate;
-import com.cdk.modern.renting.userservice.user.response.TokenResponse;
+
+import com.cdk.modern.renting.userservice.user.request.UserCreateRequest;
+import com.cdk.modern.renting.userservice.user.request.UserUpdateRequest;
 import com.cdk.modern.renting.userservice.user.response.UserInfoResponse;
 
 public interface UserService {
-
-  UserInfoResponse updateUser(UserUpdate userUpdate);
-  TokenResponse refresh(String token);
-  void revoke(String token);
+  UserInfoResponse getUser();
+  UserInfoResponse createUser(UserCreateRequest userCreateRequest);
+  UserInfoResponse updateUser(UserUpdateRequest userUpdate);
 }

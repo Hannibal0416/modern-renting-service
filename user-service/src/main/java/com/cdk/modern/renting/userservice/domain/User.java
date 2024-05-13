@@ -31,7 +31,7 @@ public class User implements Serializable {
 	private UUID id;
 
 	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(name = "user_role",
 		joinColumns = @JoinColumn(name = "user_id"),
 		inverseJoinColumns = @JoinColumn(name = "role_id"))

@@ -33,6 +33,8 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(
             authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
+                    .requestMatchers(HttpMethod.GET,"/users").authenticated()
+                    .requestMatchers(HttpMethod.PUT,"/users").authenticated()
                     .anyRequest().permitAll()
         );
 

@@ -1,17 +1,25 @@
 package com.cdk.modern.renting.userservice.user;
 
 import com.cdk.modern.renting.userservice.config.OAuth2Properties;
-import com.cdk.modern.renting.userservice.user.request.UserUpdate;
-import com.cdk.modern.renting.userservice.user.response.TokenResponse;
+import com.cdk.modern.renting.userservice.config.SecurityConfiguration;
+import com.cdk.modern.renting.userservice.domain.User;
+import com.cdk.modern.renting.userservice.user.request.UserCreateRequest;
+import com.cdk.modern.renting.userservice.user.request.UserUpdateRequest;
+
 import com.cdk.modern.renting.userservice.user.response.UserInfoResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.security.SecurityConfig;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -22,38 +30,31 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class UserServiceImpl implements UserService{
 
-  private final RestTemplate restTemplate;
-  private final OAuth2Properties oAuth2Properties;
+  private final UserRepository userRepository;
+
+
+  public UserInfoResponse getUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    User user = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new DataRetrievalFailureException("User not found"));
+    return toCanonical(user);
+  }
+
+  private UserInfoResponse toCanonical(User user) {
+    UserInfoResponse userInfoResponse = new UserInfoResponse();
+    userInfoResponse.setEmail(user.getEmail());
+    userInfoResponse.setUsername(user.getUsername());
+    userInfoResponse.setPhone(user.getPhone());
+    return userInfoResponse;
+  }
 
   @Override
-  public UserInfoResponse updateUser(UserUpdate userUpdate) {
+  public UserInfoResponse createUser(UserCreateRequest userCreateRequest) {
     return null;
   }
 
   @Override
-  public TokenResponse refresh(String token) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-    MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-//    map.add("grant_type", "grant_password");
-    map.add("grant_type", "refresh_token");
-    map.add("refresh_token", token);
-
-    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-
-    ResponseEntity<TokenResponse> response = restTemplate.postForEntity( oAuth2Properties.getTokenUri(), request , TokenResponse.class );
-    return response.getBody();
+  public UserInfoResponse updateUser(UserUpdateRequest userUpdate) {
+    return null;
   }
 
-  @Override
-  public void revoke(String token) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-    MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-    map.add("token", token);
-    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-    restTemplate.postForEntity( oAuth2Properties.getRevokeUri(), request , Void.class );
-    log.info(token);
-  }
 }

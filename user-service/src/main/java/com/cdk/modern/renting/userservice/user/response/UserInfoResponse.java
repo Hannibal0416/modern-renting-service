@@ -1,5 +1,10 @@
 package com.cdk.modern.renting.userservice.user.response;
 
-public class UserInfoResponse {
+import lombok.Data;
 
+@Data
+public class UserInfoResponse {
+  private String username;
+  private String email;
+  private String phone;
 }
