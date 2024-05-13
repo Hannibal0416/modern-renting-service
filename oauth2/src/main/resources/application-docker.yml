@@ -1,7 +1,16 @@
 server:
-  port: 8080
+  port: 9000
+
+oauth2:
+  clientId: modern-renting-client
+  clientSecret: "{noop}modern-renting-secret"
+  svcClientId: service-client
+  svcClientSecret: "{noop}service-secret"
 
 spring:
+  config:
+    activate:
+      on-profile: docker
   application:
     name: oauth2
   datasource:
@@ -12,4 +21,6 @@ spring:
   jpa:
     show-sql: true
   liquibase:
+    contexts: docker
     change-log: classpath:db/changelog/db.changelog-master.xml
+

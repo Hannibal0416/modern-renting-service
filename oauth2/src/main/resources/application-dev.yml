@@ -8,6 +8,9 @@ oauth2:
   svcClientSecret: "{noop}service-secret"
 
 spring:
+  config:
+    activate:
+      on-profile: dev
   application:
     name: oauth2
   datasource:
@@ -18,4 +21,5 @@ spring:
   jpa:
     show-sql: true
   liquibase:
+    contexts: dev
     change-log: classpath:db/changelog/db.changelog-master.xml

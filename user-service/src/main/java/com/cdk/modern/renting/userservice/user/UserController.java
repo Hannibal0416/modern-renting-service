@@ -22,7 +22,6 @@ public class UserController {
 
   private final UserService userService;
 
-
   @GetMapping
   public UserInfoResponse getUser() {
     return new UserInfoResponse();
@@ -30,12 +29,11 @@ public class UserController {
 
   @PostMapping
   public UserInfoResponse createUser(UserCreateRequest userCreateRequest) {
-    return new UserInfoResponse();
+    return userService.createUser(userCreateRequest);
   }
 
   @PutMapping
   public UserInfoResponse updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
-
     return userService.updateUser(userUpdateRequest);
   }
 

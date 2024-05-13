@@ -5,10 +5,11 @@ oauth2:
   clientId: service-client
   clientSecret: "service-secret"
   introspectionUri: http://localhost:9000/oauth2/introspect
-  tokenUri: http://localhost:9000/oauth2/token
-  revokeUri: http://localhost:9000/oauth2/revoke
 
 spring:
+  config:
+    activate:
+      on-profile: dev
   application:
     name: oauth2
   datasource:
@@ -16,4 +17,9 @@ spring:
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: true
+  liquibase:
+    contexts: dev
+    change-log: classpath:db/changelog/db.changelog-master.xml
 

@@ -1,3 +1,6 @@
+--liquibase formatted sql
+
+--changeset application:1
 INSERT INTO app_user (id, username, password, email, phone, active, created_at)
     VALUES ('7f000001-8a56-11d1-818a-56e25ae30000', 'admin', '{noop}secret', '123@com', '0123', true, NOW());
 INSERT INTO app_user (id, username, password, email, phone, active, created_at)

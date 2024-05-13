@@ -1,3 +1,6 @@
+--liquibase formatted sql
+
+--changeset application:1
 CREATE TABLE IF NOT EXISTS app_user (
     id uuid NOT NULL PRIMARY KEY,
     username varchar(64) NOT NULL,
