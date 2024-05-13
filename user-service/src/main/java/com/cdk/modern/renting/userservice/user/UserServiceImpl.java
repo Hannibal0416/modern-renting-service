@@ -6,6 +6,7 @@ import com.cdk.modern.renting.userservice.user.response.TokenResponse;
 import com.cdk.modern.renting.userservice.user.response.UserInfoResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class UserServiceImpl implements UserService{
 
   private final RestTemplate restTemplate;
@@ -51,6 +53,7 @@ public class UserServiceImpl implements UserService{
     MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
     map.add("token", token);
     HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-    restTemplate.postForEntity( oAuth2Properties.getRevoke(), request , Void.class );
+    restTemplate.postForEntity( oAuth2Properties.getRevokeUri(), request , Void.class );
+    log.info(token);
   }
 }
