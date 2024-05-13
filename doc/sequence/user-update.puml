@@ -20,9 +20,9 @@ activate UserService
 
 UserService -> OAuth: POST /oauth/introspect(token)
 activate OAuth
-OAuth --> UserService: Response(active:true, userId)
+OAuth --> UserService: Response(active:true, username)
 
-UserService -> OAuth: PUT /users/{id}(userId,userInfo)
+UserService -> OAuth: PUT /users/{username}(username,userInfo)
 
 OAuth --> UserService: Response(userInfo)
 deactivate OAuth

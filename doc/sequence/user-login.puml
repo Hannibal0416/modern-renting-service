@@ -18,10 +18,10 @@ activate Frontend
 Frontend -> UserService: Login Request
 activate UserService
 
-UserService -> OAuth: POST /oauth/token grant_type:password token(user,pwd)
+UserService -> OAuth: POST /oauth/token grant_type:password token(username,pwd)
 activate OAuth
 OAuth --> UserService: response(token, refresh-token)
-UserService -> OAuth: POST /oauth/introspect(token)
+UserService -> OAuth: GET /users(username)
 OAuth --> UserService: response(userInfo)
 deactivate OAuth
 

@@ -93,13 +93,13 @@ public class AuthorizationServerConfiguration {
     }
 
     @Bean
-    public RegisteredClientRepository registeredClientRepository() {
+    public RegisteredClientRepository registeredClientRepository(OAuth2Properties oAuth2Properties) {
         RegisteredClient demoClient = RegisteredClient.withId(UUID.randomUUID().toString())
             .clientName("Modern Renting client")
-            .clientId("modern-renting-client")
+            .clientId(oAuth2Properties.getClientId())
 
             // {noop} means "no operation," i.e., a raw password without any encoding applied.
-            .clientSecret("{noop}modern-renting-secret")
+            .clientSecret(oAuth2Properties.getClientSecret())
 
             .redirectUri("http://localhost:8080/")
             .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)

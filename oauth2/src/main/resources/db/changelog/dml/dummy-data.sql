@@ -9,8 +9,8 @@ INSERT INTO role (id, name) VALUES (2, 'USER');
 INSERT INTO user_role (user_id, role_id) VALUES ('7f000001-8a56-11d1-818a-56e25ae30000', 1);
 INSERT INTO user_role (user_id, role_id) VALUES ('7f000001-8a56-1695-818a-56687e770000', 2);
 
-INSERT INTO authority (id, name) VALUES (1, 'ARTICLE_READ');
-INSERT INTO authority (id, name) VALUES (2, 'ARTICLE_WRITE');
+INSERT INTO authority (id, name) VALUES (1, 'READ');
+INSERT INTO authority (id, name) VALUES (2, 'WRITE');
 
 -- ADMIN can read and write
 INSERT INTO role_authority (role_id, authority_id) VALUES (1, 1);

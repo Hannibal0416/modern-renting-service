@@ -1,6 +1,10 @@
 server:
   port: 9000
 
+oauth2:
+  clientId: modern-renting-client
+  clientSecret: "{noop}modern-renting-secret"
+
 spring:
   application:
     name: oauth2

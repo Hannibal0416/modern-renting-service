@@ -1,6 +1,7 @@
 package com.cdk.modern.renting.oauth2.users;
 
 import com.cdk.modern.renting.oauth2.domain.User;
+import java.util.UUID;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
