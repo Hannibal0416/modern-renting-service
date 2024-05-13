@@ -42,9 +42,9 @@ alt successful case
   activate UserService
   UserService -> OAuth: POST /oauth2/introspection(token)
   activate OAuth
-  OAuth --> UserService: response(active:true)
+  OAuth --> UserService: response(active:true, userId)
 
-  UserService -> OAuth: PUT /users(token, userInfo)
+  UserService -> OAuth: PUT /users/{id}(userId, userInfo)
 
   OAuth --> UserService: response(userInfo)
   deactivate OAuth

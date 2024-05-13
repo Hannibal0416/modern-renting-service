@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+<!--    <changeSet author="mockdata" id="0" runAlways="true" context="dev, qa">-->
+<!--        <sql dbms="mariadb" endDelimiter="/">-->
+<!--            DO $$-->
+<!--            DECLARE-->
+<!--            seq RECORD;-->
+<!--            tab RECORD;-->
+<!--            hasTablesToTruncate int;-->
+<!--            hasSequencesToReset int;-->
+<!--            BEGIN-->
+<!--            select count(*)-->
+<!--            into hasTablesToTruncate-->
+<!--            from information_schema.tables-->
+<!--            where schemaname = current_schema()-->
+<!--            and tablename not like 'databasechangelog%';-->
+
+<!--            if (hasTablesToTruncate > 0) then-->
+<!--            FOR tab IN (SELECT table_name-->
+<!--            from information_schema.tables-->
+<!--            where schemaname = current_schema()-->
+<!--            and tablename not like 'databasechangelog%')-->
+<!--            LOOP-->
+<!--            EXECUTE 'drop table ' || quote_ident(tab.tablename) || ' restart identity cascade';-->
+<!--            END LOOP;-->
+<!--            end if;-->
+<!--            END $$-->
+<!--            /-->
+<!--        </sql>-->
+<!--    </changeSet>-->
+    <include file="db/changelog/ddl/tables/app_user.sql" />
+    <include file="db/changelog/ddl/tables/authority.sql"/>
+    <include file="db/changelog/ddl/tables/role.sql"/>
+    <include file="db/changelog/ddl/tables/role_authority.sql"/>
+    <include file="db/changelog/ddl/tables/user_role.sql"/>
+    <include file="db/changelog/dml/dummy-data.sql"/>
+</databaseChangeLog>

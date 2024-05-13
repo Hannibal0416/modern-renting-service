@@ -1,0 +1,78 @@
+@startuml schema
+!theme plain
+hide empty methods
+
+!procedure $table($name, $slug)
+entity "<b>$name</b>" as $slug << (T, Orange) >>
+!endprocedure
+
+!procedure $view($name, $slug)
+entity "<b>$name</b>" as $slug << (V, Aquamarine) >>
+!endprocedure
+
+!procedure $primary_key($name)
+<color:#GoldenRod><&key></color> <b>$name</b>
+!endprocedure
+
+!procedure $foreign_key($name)
+<color:#Silver><&key></color> $name
+!endprocedure
+
+!procedure $column($name)
+<color:#White><&media-record></color> $name
+!endprocedure
+
+!procedure $unique($name)
+<color:#Red><&key></color> $name
+!endprocedure
+
+!procedure $index($name)
+<color:#Green><&key></color> $name
+!endprocedure
+
+title "OAuth2"
+
+$table("app_user", "t_user") {
+    $primary_key("id") : UUID
+    --
+    $column("username") : VARCHAR
+    $column("password") : VARCHAR
+    $column("first_name") : VARCHAR
+    $column("middle_name") : VARCHAR
+    $column("last_name") : VARCHAR
+    $column("phone_number") : VARCHAR
+    $column("avatar") : BYTEA
+    $column("active") : BOOLEAN
+    $column("created_at") : TIMESTAMP
+}
+
+$table("role", "t_role") {
+    $primary_key("id") : BIGINT
+    --
+    $column("name") : VARCHAR
+}
+
+$table("user_role", "t_user_role") {
+    $column("user_id") : UUID
+     $column("role_id") : BIGINT
+}
+
+$table("authority", "t_authority") {
+    $primary_key("id") : BIGINT
+    --
+    $column("name") : VARCHAR
+}
+
+$table("role_authority", "t_role_authority") {
+    $column("role_id") : BIGINT
+    $column("authority_id") : BIGINT
+}
+
+t_user::id ||--|{ t_user_role::user_id
+
+t_role::id ||--|{ t_user_role::role_id
+
+t_role::id ||--|{ t_role_authority::role_id
+
+t_authority::id ||--|{ t_role_authority::authority_id
+@enduml
