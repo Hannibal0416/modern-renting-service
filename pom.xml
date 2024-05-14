@@ -51,6 +51,7 @@
     <liquibase.version>4.27.0</liquibase.version>
     <oauth2-oidc-sdk.version>11.10.1</oauth2-oidc-sdk.version>
     <springdoc-openapi.version>2.5.0</springdoc-openapi.version>
+    <postgres.version>42.7.3</postgres.version>
   </properties>
 
   <modules>
@@ -109,6 +110,11 @@
         <groupId>org.springdoc</groupId>
         <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         <version>${springdoc-openapi.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${postgres.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

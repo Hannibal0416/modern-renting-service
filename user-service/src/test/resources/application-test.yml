@@ -1,0 +1,25 @@
+server:
+  port: 8081
+
+oauth2:
+  clientId: service-client
+  clientSecret: "service-secret"
+  introspectionUri: http://localhost:9000/oauth2/introspect
+
+spring:
+  config:
+    activate:
+      on-profile: test
+  application:
+    name: oauth2
+  datasource:
+    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: true
+  liquibase:
+    contexts: test
+    change-log: classpath:db/changelog/db.changelog-master.xml
+

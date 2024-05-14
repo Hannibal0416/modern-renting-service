@@ -21,21 +21,21 @@ class GlobalControllerExceptionHandler {
   private static final String ERR_TEMPLATE = "error: {}, request:{}";
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<Map<String, List<String>>> handleValidationErrors(
+  public ResponseEntity<ErrorResponse> handleValidationErrors(
       MethodArgumentNotValidException ex) {
     List<String> errors =
         ex.getBindingResult().getFieldErrors().stream().map(FieldError::getDefaultMessage).toList();
     return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
   }
 
-  private Map<String, List<String>> getErrorsMap(List<String> errors) {
-    Map<String, List<String>> errorResponse = new HashMap<>();
-    errorResponse.put("errors", errors);
+  private ErrorResponse getErrorsMap(List<String> errors) {
+    ErrorResponse errorResponse = new ErrorResponse();
+    errorResponse.setErrors(errors);
     return errorResponse;
   }
 
   @ExceptionHandler(RuntimeException.class)
-  public ResponseEntity<Map<String, List<String>>> handleServerError(
+  public ResponseEntity<ErrorResponse> handleServerError(
       RuntimeException ex, WebRequest request) {
     log.error(ERR_TEMPLATE, ex, request);
     List<String> errors = Arrays.asList(ex.getMessage(), request.getContextPath());
@@ -44,7 +44,7 @@ class GlobalControllerExceptionHandler {
   }
 
   @ExceptionHandler(RestClientException.class)
-  public ResponseEntity<Map<String, List<String>>> handleGatewayError(
+  public ResponseEntity<ErrorResponse> handleGatewayError(
       RuntimeException ex, WebRequest request) {
     log.error(ERR_TEMPLATE, ex, request);
     List<String> errors = Arrays.asList(ex.getMessage(), request.getContextPath());
@@ -53,7 +53,7 @@ class GlobalControllerExceptionHandler {
   }
 
   @ExceptionHandler(DataIntegrityViolationException.class)
-  public ResponseEntity<Map<String, List<String>>> handleConflict(
+  public ResponseEntity<ErrorResponse> handleConflict(
       RuntimeException ex, WebRequest request) {
     log.error(ERR_TEMPLATE, ex, request);
     List<String> errors = Collections.singletonList(ex.getMessage());
@@ -61,7 +61,7 @@ class GlobalControllerExceptionHandler {
   }
 
   @ExceptionHandler({DataRetrievalFailureException.class, NoSuchElementException.class})
-  public ResponseEntity<Map<String, List<String>>> handleNotFound(
+  public ResponseEntity<ErrorResponse> handleNotFound(
       RuntimeException ex, WebRequest request) {
     log.error(ERR_TEMPLATE, ex, request);
     List<String> errors = Collections.singletonList(ex.getMessage());
