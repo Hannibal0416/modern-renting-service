@@ -34,8 +34,7 @@ public class UserController {
   @Operation(summary = "Get a user by name(the name will be retrieved from the token", description = "Returns the user's information")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully retrieved"),
-      @ApiResponse(responseCode = "400", description = "Bad Request - Token is invalid", content = { @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)) }),
+      @ApiResponse(responseCode = "401", description = "Unauthorized - Token is invalid"),
       @ApiResponse(responseCode = "404", description = "Not found - The user was not found", content = { @Content(mediaType = "application/json",
           schema = @Schema(implementation = ErrorResponse.class)) })
   })

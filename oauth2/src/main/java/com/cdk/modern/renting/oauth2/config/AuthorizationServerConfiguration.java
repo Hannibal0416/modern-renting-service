@@ -119,10 +119,10 @@ public class AuthorizationServerConfiguration {
 
         RegisteredClient serviceClient = RegisteredClient.withId(UUID.randomUUID().toString())
             .clientName("Modern Renting client")
-            .clientId(oAuth2Properties.getClientId()+"2")
+            .clientId(oAuth2Properties.getSvcClientId())
 
             // {noop} means "no operation," i.e., a raw password without any encoding applied.
-            .clientSecret(oAuth2Properties.getClientSecret()+"2")
+            .clientSecret(oAuth2Properties.getSvcClientSecret())
 
             .redirectUri("http://localhost:8080/")
             .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
