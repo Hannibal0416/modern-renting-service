@@ -11,3 +11,5 @@ CREATE TABLE IF NOT EXISTS app_user (
     active boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone NOT NULL
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS app_user_username_unique_idx ON app_user (username);

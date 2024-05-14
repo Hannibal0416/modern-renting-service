@@ -1,0 +1,150 @@
+openapi: 3.0.1
+info:
+  title: Modern Renting User Service
+  description: SpringBoot 3.x application
+  version: v0.0.1
+servers:
+  - url: http://localhost:8081
+    description: Generated server url
+security:
+  - BearerAuthentication: []
+paths:
+  /users:
+    get:
+      tags:
+        - user-controller
+      summary: Get a user by name(the name will be retrieved from the token
+      description: Returns the user's information
+      operationId: getUser
+      responses:
+        '200':
+          description: Successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfoResponse'
+        '400':
+          description: Bad Request - Token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found - The user was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - user-controller
+      summary: update the user
+      description: Returns the user's information
+      operationId: updateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserInfoResponse'
+        '400':
+          description: Bad Request - bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found - The user was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - user-controller
+      summary: create a user
+      description: Returns the user's information
+      operationId: createUser
+      parameters:
+        - name: userCreateRequest
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        '201':
+          description: Successfully created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserInfoResponse'
+        '400':
+          description: Bad Request - bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    UserUpdateRequest:
+      type: object
+      properties:
+        password:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+    ErrorResponse:
+      required:
+        - errors
+      type: object
+      properties:
+        errors:
+          type: array
+          example:
+            - Not found
+          items:
+            type: string
+            example: '["Not found"]'
+    UserInfoResponse:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+    UserCreateRequest:
+      required:
+        - email
+        - password
+        - phone
+        - username
+      type: object
+      properties:
+        username:
+          type: string
+          example: RevEx
+        password:
+          type: string
+          example: RevExPWD
+        email:
+          type: string
+          example: revex@chc.com
+        phone:
+          type: string
+          example: '123456789'
+  securitySchemes:
+    BearerAuthentication:
+      type: http
+      scheme: bearer
+      bearerFormat: Opaque

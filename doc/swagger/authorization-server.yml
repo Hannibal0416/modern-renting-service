@@ -1,0 +1,125 @@
+openapi: 3.0.1
+info:
+  title: Spring Authorization Server
+  description: SpringBoot 3.x application
+  version: v0.0.1
+servers:
+  - url: http://localhost:9000
+    description: Spring Authorization Server
+security:
+  - basicAuth: []
+paths:
+  /oauth2/token:
+    post:
+      tags:
+        - oauth2-token
+      summary: Get opaque tokens and refresh an expired token.
+      description: Returns access and refresh tokens
+      operationId: token
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+        required: true
+      responses:
+        '200':
+          description: Successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: Bad Request - Token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /oauth2/revoke:
+    post:
+      tags:
+        - oauth2-token
+      summary: revoke the token
+      description: revoke the token
+      operationId: revoke
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RevokeTokenRequest'
+        required: true
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: Bad Request - bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    TokenRequest:
+      type: object
+      properties:
+        grant_type:
+          type: string
+          enum: ["grant_password", "refresh_token"]
+        username:
+          type: string
+          example: "admin"
+        password:
+          type: string
+          example: "secret"
+        refresh_token:
+          type: string
+          example: "bAGiwRqV-vXnZ3WxFLEAAT4b_5WukSXI8VoGpvPifrKdzQWE_wRUImKilegZvw_Zl9gXCLEm3jEF6gjhGcJ9FwdV1RvqyVwA_6hSzOr44HnliogMVDvIxSRr7ubHpB_e"
+    RevokeTokenRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "M68FDiPO_-Axxa7Woaq29THUOk3k_fB978fN8a9pu9q2ylTiRRYyELQTFUPB4tzy2YXp5wOfsZ_Js9qPTvOZtCpXVyQworUgzFJeEYI1rR6gsC5EBs7Lvqki478lUlCe"
+    ErrorResponse:
+      required:
+        - error
+      type: object
+      properties:
+        error:
+          type: string
+          example: "invalid_client"
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: "M68FDiPO_-Axxa7Woaq29THUOk3k_fB978fN8a9pu9q2ylTiRRYyELQTFUPB4tzy2YXp5wOfsZ_Js9qPTvOZtCpXVyQworUgzFJeEYI1rR6gsC5EBs7Lvqki478lUlCe"
+        refresh_token:
+          type: string
+          example: "bAGiwRqV-vXnZ3WxFLEAAT4b_5WukSXI8VoGpvPifrKdzQWE_wRUImKilegZvw_Zl9gXCLEm3jEF6gjhGcJ9FwdV1RvqyVwA_6hSzOr44HnliogMVDvIxSRr7ubHpB_e"
+        token_type:
+          type: string
+          example: "Bearer"
+        expires_in:
+          type: integer
+          example: 17999
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
