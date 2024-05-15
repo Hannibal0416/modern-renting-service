@@ -26,22 +26,25 @@ services:
       - db
 
   user:
-    image: maven:3-eclipse-temurin-21-alpine
+    image: eclipse-temurin:21-jdk
     restart: always
+    command: "tail -f /dev/null"
     networks:
       - db
       - backend
 
   oauth2:
-    image: maven:3-eclipse-temurin-21-alpine
+    image: eclipse-temurin:21-jdk
     restart: always
+    command: "tail -f /dev/null"
     networks:
       - db
       - backend
 
   vehicle:
-    image: maven:3-eclipse-temurin-21-alpine
+    image: eclipse-temurin:21-jdk
     restart: always
+    command: "tail -f /dev/null"
     networks:
       - db
       - backend
