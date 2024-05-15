@@ -22,6 +22,11 @@ services:
       - type: bind
         source: ./create_database.sql
         target: /docker-entrypoint-initdb.d/create_database.sql
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 20s
+      timeout: 3s
+      retries: 3
     networks:
       - db
 
@@ -29,6 +34,9 @@ services:
     image: eclipse-temurin:21-jdk
     restart: always
     command: "tail -f /dev/null"
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - db
       - backend
@@ -37,6 +45,9 @@ services:
     image: eclipse-temurin:21-jdk
     restart: always
     command: "tail -f /dev/null"
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - db
       - backend
@@ -45,6 +56,9 @@ services:
     image: eclipse-temurin:21-jdk
     restart: always
     command: "tail -f /dev/null"
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - db
       - backend
