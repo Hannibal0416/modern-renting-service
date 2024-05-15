@@ -6,6 +6,8 @@ networks:
     driver: bridge
   backend:
     driver: bridge
+  db:
+    driver: bridge
 
 services:
   postgres:
@@ -21,4 +23,25 @@ services:
         source: ./create_database.sql
         target: /docker-entrypoint-initdb.d/create_database.sql
     networks:
+      - db
+
+  user:
+    image: maven:3-eclipse-temurin-21-alpine
+    restart: always
+    networks:
+      - db
+      - backend
+
+  oauth2:
+    image: maven:3-eclipse-temurin-21-alpine
+    restart: always
+    networks:
+      - db
+      - backend
+
+  vehicle:
+    image: maven:3-eclipse-temurin-21-alpine
+    restart: always
+    networks:
+      - db
       - backend
