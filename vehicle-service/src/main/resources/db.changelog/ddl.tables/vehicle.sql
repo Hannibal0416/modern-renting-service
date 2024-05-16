@@ -2,8 +2,9 @@
 
 --changeset application:1
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 CREATE TABLE IF NOT EXISTS vehicle (
-    id UUID PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     model_id INTEGER NOT NULL,
     image_uri VARCHAR,
     rent_price BIGINT NOT NULL DEFAULT 0,
