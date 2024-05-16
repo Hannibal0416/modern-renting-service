@@ -1,6 +1,7 @@
 --liquibase formatted sql
 
 --changeset application:1
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS vehicle (
     id UUID PRIMARY KEY,
     model_id INTEGER NOT NULL,

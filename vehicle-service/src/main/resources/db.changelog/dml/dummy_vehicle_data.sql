@@ -18,8 +18,8 @@ INSERT INTO vehicle_model(id, type_id, brand_id, name) VALUES
 (4, 2, 2, '911');
 SELECT SETVAL(pg_get_serial_sequence('vehicle_model', 'id'), (SELECT MAX(id) FROM vehicle_model));
 
-INSERT INTO vehicle_model (model_id, rent_price, name, color, production_year, seat_count, transmission, fuel_type) VALUES
-(1, 3000, 'Hannibal', 'White', 2022, 5, 'AT', '95'),
-(2, 2500, 'Nyotie', 'Black', 2016, 4, 'AT', '95'),
-(3, 6000, 'Allen', 'Blue', 2020, 5, 'AT', '95'),
-(4, 8000, 'Ricky', 'Yellow', 2018, 4, 'MT', '98');
+INSERT INTO vehicle(id, model_id, rent_price, name, color, production_year, seat_count, transmission, fuel_type) VALUES
+(gen_random_uuid(), 1, 3000, 'Hannibal', 'White', 2022, 5, 'AT', '95'),
+(gen_random_uuid(), 2, 2500, 'Nyotie', 'Black', 2016, 4, 'AT', '95'),
+(gen_random_uuid(), 3, 6000, 'Allen', 'Blue', 2020, 5, 'AT', '95'),
+(gen_random_uuid(), 4, 8000, 'Ricky', 'Yellow', 2018, 4, 'MT', '98');
