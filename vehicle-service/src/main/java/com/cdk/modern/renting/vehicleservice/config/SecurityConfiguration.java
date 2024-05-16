@@ -13,8 +13,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableReactiveMethodSecurity(useAuthorizationManager = true)
 @EnableWebFluxSecurity
 public class SecurityConfiguration {
-    private static final String ACTUATOR_ENDPOINT_PATTERN = "/actuator/*";
-    private static final String SWAGGER_ENDPOINT_PATTERN = "*";
+
     @Bean
     public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http,
         ReactiveOpaqueTokenAuthenticationConverter opaqueTokenAuthenticationConverter, OAuth2Properties oAuth2Properties
