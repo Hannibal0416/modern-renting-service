@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS app_user (
     email varchar(64) DEFAULT NULL,
     phone varchar(64) DEFAULT NULL,
     avatar_url varchar(2048) DEFAULT NULL,
-    active boolean DEFAULT false NOT NULL,
+    active boolean DEFAULT true NOT NULL,
     created_at timestamp without time zone NOT NULL
 );
 
