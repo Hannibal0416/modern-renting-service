@@ -1,0 +1,82 @@
+@startuml schema
+!theme plain
+hide empty methods
+
+!procedure $table($name, $slug)
+entity "<b>$name</b>" as $slug << (T, Orange) >>
+!endprocedure
+
+!procedure $view($name, $slug)
+entity "<b>$name</b>" as $slug << (V, Aquamarine) >>
+!endprocedure
+
+!procedure $primary_key($name)
+<color:#GoldenRod><&key></color> <b>$name</b>
+!endprocedure
+
+!procedure $foreign_key($name)
+<color:#Silver><&key></color> $name
+!endprocedure
+
+!procedure $column($name)
+<color:#White><&media-record></color> $name
+!endprocedure
+
+!procedure $unique($name)
+<color:#Red><&key></color> $name
+!endprocedure
+
+!procedure $index($name)
+<color:#Green><&key></color> $name
+!endprocedure
+
+title "OAuth2"
+
+$table("vehicle_type", "t_vehicle_type") {
+    $primary_key("id") : SERIAL
+    --
+    $column("name") : VARCHAR
+    $column("active") : BOOLEAN
+    $column("created_at") : TIMESTAMP
+}
+
+$table("vehicle_brand", "t_vehicle_brand") {
+    $primary_key("id") : SERIAL
+    --
+    $column("name") : VARCHAR
+    $column("active") : BOOLEAN
+    $column("created_at") : TIMESTAMP
+}
+
+$table("vehicle_model", "t_vehicle_model") {
+    $primary_key("id") : SERIAL
+    --
+    $foreign_key("type_id") : INTEGER
+    $foreign_key("brand_id") : INTEGER
+    $column("name") : VARCHAR
+    $column("active") : BOOLEAN
+    $column("created_at") : TIMESTAMP
+}
+
+$table("vehicle", "t_vehicle") {
+    $primary_key("id") : UUID
+    --
+    $foreign_key("model_id") : INTEGER
+    $column("rent_price") : BIGINT
+    $column("active") : BOOLEAN
+    $column("created_at") : TIMESTAMP
+
+    $column("name") : VARCHAR
+    $column("color") : VARCHAR
+    $column("production_year") : SMALLINT
+    $column("seat_count") : SMALLINT
+    $column("transmission") : VARCHAR
+    $column("fuel_type") : VARCHAR
+}
+
+t_vehicle_model::id ||--|{ t_vehicle_type::role_id
+
+t_vehicle_model::id ||--|{ t_vehicle_brand::role_id
+
+t_vehicle::id ||--|{ t_vehicle_model::authority_id
+@enduml

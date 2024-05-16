@@ -57,5 +57,5 @@ http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibas
     <include file="db/changelog/ddl/tables/role_authority.sql"/>
     <include file="db/changelog/ddl/tables/user_role.sql"/>
 
-    <include file="db/changelog/dml/dummy-data.sql"/>
+    <include file="db/changelog/dml/dummy-data.sql" context="dev"/>
 </databaseChangeLog>

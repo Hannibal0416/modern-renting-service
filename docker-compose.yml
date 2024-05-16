@@ -6,6 +6,8 @@ networks:
     driver: bridge
   backend:
     driver: bridge
+  db:
+    driver: bridge
 
 services:
   postgres:
@@ -20,5 +22,43 @@ services:
       - type: bind
         source: ./create_database.sql
         target: /docker-entrypoint-initdb.d/create_database.sql
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 20s
+      timeout: 3s
+      retries: 3
     networks:
+      - db
+
+  user:
+    image: eclipse-temurin:21-jdk
+    restart: always
+    command: "tail -f /dev/null"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - db
+      - backend
+
+  oauth2:
+    image: eclipse-temurin:21-jdk
+    restart: always
+    command: "tail -f /dev/null"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - db
+      - backend
+
+  vehicle:
+    image: eclipse-temurin:21-jdk
+    restart: always
+    command: "tail -f /dev/null"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - db
       - backend
