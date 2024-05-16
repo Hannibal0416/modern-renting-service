@@ -30,7 +30,7 @@ entity "<b>$name</b>" as $slug << (V, Aquamarine) >>
 <color:#Green><&key></color> $name
 !endprocedure
 
-title "OAuth2"
+title "Vehicle"
 
 $table("vehicle_type", "t_vehicle_type") {
     $primary_key("id") : SERIAL
