@@ -1,14 +1,17 @@
 package com.cdk.modern.renting.vehicleservice.example.vehicle.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Data;
 
 @Data
-public class VehicleResponse {
+@JsonInclude(Include.NON_NULL)
+public class ExampleVehicleResponse {
 
   protected UUID id;
-  private ModelResponse model;
+  private ExampleModelResponse model;
   private String imageUri;
   private String rentPrice;
   private String name;

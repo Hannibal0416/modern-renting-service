@@ -1,8 +1,8 @@
 package com.cdk.modern.renting.vehicleservice.example.vehicle;
 
 import com.cdk.modern.renting.vehicleservice.advice.ErrorResponse;
-import com.cdk.modern.renting.vehicleservice.example.vehicle.request.VehicleRequest;
-import com.cdk.modern.renting.vehicleservice.example.vehicle.response.VehicleResponse;
+import com.cdk.modern.renting.vehicleservice.example.vehicle.request.ExampleVehicleRequest;
+import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ExampleVehicleResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,12 +22,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/vehicles")
+@RequestMapping("/example/vehicles")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
-public class VehicleController {
+public class ExampleVehicleController {
 
-  private final VehicleService vehicleService;
+  private final ExampleVehicleService vehicleService;
 
   @Operation(summary = "Get a vehicle by id", description = "Returns a vehicle")
   @ApiResponses(value = {
@@ -39,7 +39,7 @@ public class VehicleController {
   })
   @GetMapping(value = "/{id}", produces = "application/json")
 //  @PreAuthorize("hasAnyAuthority('READ')")
-  public Mono<VehicleResponse> getVehicle(@PathVariable UUID id) {
+  public Mono<ExampleVehicleResponse> getVehicle(@PathVariable UUID id) {
 //    UUID uuid = UUID.fromString(id);
     return vehicleService.findById(id);
   }
@@ -48,7 +48,7 @@ public class VehicleController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully retrieved", content = {
           @Content(mediaType = "application/json",
-              schema = @Schema(implementation = VehicleRequest.class))}),
+              schema = @Schema(implementation = ExampleVehicleRequest.class))}),
       @ApiResponse(responseCode = "401", description = "Unauthorized - Token is invalid"),
       @ApiResponse(responseCode = "404", description = "Not found - The vehicles was not found", content = {
           @Content(mediaType = "application/json",
@@ -56,11 +56,11 @@ public class VehicleController {
   })
   @GetMapping(produces = "application/json")
 //  @PreAuthorize("hasAnyAuthority('READ')")
-  public Flux<VehicleResponse> getVehicles(@Valid VehicleRequest request) {
+  public Flux<ExampleVehicleResponse> getVehicles(@Valid ExampleVehicleRequest request) {
     log.info(request.toString());
-    List<VehicleResponse> vehicleResponseList = List.of(
-        new VehicleResponse(),
-        new VehicleResponse()
+    List<ExampleVehicleResponse> vehicleResponseList = List.of(
+        new ExampleVehicleResponse(),
+        new ExampleVehicleResponse()
     );
     return Flux.fromIterable(vehicleResponseList);
   }

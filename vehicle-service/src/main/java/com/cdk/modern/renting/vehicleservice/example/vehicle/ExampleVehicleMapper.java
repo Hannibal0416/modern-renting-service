@@ -8,7 +8,7 @@ import io.r2dbc.spi.Row;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
-public class VehicleMapper implements BiFunction<Row, Object, Vehicle> {
+public class ExampleVehicleMapper implements BiFunction<Row, Object, Vehicle> {
 
   public Vehicle apply(Row row, Object o) {
     UUID id = row.get("id", UUID.class);

@@ -8,7 +8,7 @@ import org.springframework.r2dbc.core.DatabaseClient;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class CustomVehicleRepositoryImpl implements CustomVehicleRepository {
+public class ExampleCustomVehicleRepositoryImpl implements ExampleCustomVehicleRepository {
 
   private final DatabaseClient client;
 
@@ -19,7 +19,7 @@ public class CustomVehicleRepositoryImpl implements CustomVehicleRepository {
         FROM vehicle v LEFT JOIN vehicle_model m ON v.model_id = m.id LEFT JOIN vehicle_brand b on m.brand_id = b.id LEFT JOIN vehicle_type t on m.type_id = t.id
         WHERE v.id = :id
         """;
-    VehicleMapper mapper = new VehicleMapper();
+    ExampleVehicleMapper mapper = new ExampleVehicleMapper();
     return client.sql(query).bind("id", id).map(mapper::apply).first();
   }
 }

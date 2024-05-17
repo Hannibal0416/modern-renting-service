@@ -1,9 +1,9 @@
 package com.cdk.modern.renting.vehicleservice.example.vehicle;
 
-import com.cdk.modern.renting.vehicleservice.example.vehicle.response.BrandResponse;
-import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ModelResponse;
-import com.cdk.modern.renting.vehicleservice.example.vehicle.response.VehicleResponse;
-import com.cdk.modern.renting.vehicleservice.example.vehicle.response.TypeResponse;
+import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ExampleBrandResponse;
+import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ExampleModelResponse;
+import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ExampleTypeResponse;
+import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ExampleVehicleResponse;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -14,22 +14,22 @@ import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class VehicleServiceImpl implements VehicleService{
+public class ExampleVehicleServiceImpl implements ExampleVehicleService{
 
-  private final VechileRepository vechileRepository;
+  private final ExampleVechileRepository vechileRepository;
 
   @Override
-  public Mono<VehicleResponse> findById(UUID id) {
+  public Mono<ExampleVehicleResponse> findById(UUID id) {
     return vechileRepository.findVehicleById(id).map(Optional::of).defaultIfEmpty(Optional.empty())
         .flatMap(optionalVehicle -> {
           if (optionalVehicle.isPresent()) {
-            VehicleResponse vehicleResponse = new VehicleResponse();
+            ExampleVehicleResponse vehicleResponse = new ExampleVehicleResponse();
             BeanUtils.copyProperties(optionalVehicle.get(), vehicleResponse);
-            ModelResponse modelResponse = new ModelResponse();
+            ExampleModelResponse modelResponse = new ExampleModelResponse();
             BeanUtils.copyProperties(optionalVehicle.get().getModel(), modelResponse);
-            BrandResponse brandResponse =new BrandResponse();
+            ExampleBrandResponse brandResponse =new ExampleBrandResponse();
             BeanUtils.copyProperties(optionalVehicle.get().getModel().getBrand(), brandResponse);
-            TypeResponse typeResponse = new TypeResponse();
+            ExampleTypeResponse typeResponse = new ExampleTypeResponse();
             BeanUtils.copyProperties(optionalVehicle.get().getModel().getType(), typeResponse);
             modelResponse.setBrand(brandResponse);
             modelResponse.setType(typeResponse);

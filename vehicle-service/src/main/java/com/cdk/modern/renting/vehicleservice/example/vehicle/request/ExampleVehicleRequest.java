@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class VehicleRequest {
+public class ExampleVehicleRequest {
   @Schema(name = "modelId", example = "RevEx", maxLength= 10, requiredMode = RequiredMode.REQUIRED)
   @Max(10)
   private String modelId;
