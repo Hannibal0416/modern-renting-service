@@ -8,7 +8,7 @@ import io.r2dbc.spi.Row;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
-public class ExampleVehicleMapper implements BiFunction<Row, Object, Vehicle> {
+class ExampleVehicleMapper implements BiFunction<Row, Object, Vehicle> {
 
   public Vehicle apply(Row row, Object o) {
     UUID id = row.get("id", UUID.class);
@@ -16,20 +16,12 @@ public class ExampleVehicleMapper implements BiFunction<Row, Object, Vehicle> {
     String vehicleName = row.get("vehicle_name", String.class);
     String brandName = row.get("brand_name", String.class);
     String typeName = row.get("type_name", String.class);
-    String modelName = row.get("model_name",String.class);
-    Vehicle vehicle = new Vehicle();
-    Model model = new Model();
-    model.setName(modelName);
-    Brand brand = new Brand();
-    brand.setName(brandName);
-    model.setBrand(brand);
-    Type type = new Type();
-    type.setName(typeName);
-    model.setType(type);
-    vehicle.setId(id);
-    vehicle.setName(vehicleName);
-    vehicle.setImageUri(imageUri);
-    vehicle.setModel(model);
-    return vehicle;
+    String modelName = row.get("model_name", String.class);
+
+    Brand brand = Brand.builder().name(brandName).build();
+    Type type = Type.builder().name(typeName).build();
+    Model model = Model.builder().name(modelName).brand(brand).type(type).build();
+    return Vehicle.builder().id(id).name(vehicleName).imageUri(imageUri).model(model).build();
+
   }
 }

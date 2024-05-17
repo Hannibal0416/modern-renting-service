@@ -53,11 +53,9 @@ http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibas
 
     <include file="db/changelog/ddl/tables/h2/vehicle.sql" context="dev"/>
     <include file="db/changelog/ddl/tables/vehicle.sql" context="docker"/>
-    <include file="db/changelog/ddl/tables/vehicle_type.sql" context="dev,docker"/>
-    <include file="db/changelog/ddl/tables/vehicle_brand.sql" context="dev,docker"/>
-    <include file="db/changelog/ddl/tables/vehicle_model.sql" context="dev,docker"/>
+    <include file="db/changelog/ddl/tables/vehicle_type.sql" />
+    <include file="db/changelog/ddl/tables/vehicle_brand.sql" />
+    <include file="db/changelog/ddl/tables/vehicle_model.sql" />
 
-
-    <include file="db/changelog/dml/h2/dummy_vehicle_data.sql" context="dev"/>
-    <include file="db/changelog/dml/dummy_vehicle_data.sql" context="docker"/>
+    <include file="db/changelog/dml/dummy_vehicle_data.sql"/>
 </databaseChangeLog>
