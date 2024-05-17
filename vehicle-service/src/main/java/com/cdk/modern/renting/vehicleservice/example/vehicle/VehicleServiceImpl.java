@@ -1,10 +1,9 @@
-package com.cdk.modern.renting.vehicleservice.vehicle;
+package com.cdk.modern.renting.vehicleservice.example.vehicle;
 
-import com.cdk.modern.renting.vehicleservice.domain.Vehicle;
-import com.cdk.modern.renting.vehicleservice.vehicle.response.BrandResponse;
-import com.cdk.modern.renting.vehicleservice.vehicle.response.ModelResponse;
-import com.cdk.modern.renting.vehicleservice.vehicle.response.TypeResponse;
-import com.cdk.modern.renting.vehicleservice.vehicle.response.VehicleResponse;
+import com.cdk.modern.renting.vehicleservice.example.vehicle.response.BrandResponse;
+import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ModelResponse;
+import com.cdk.modern.renting.vehicleservice.example.vehicle.response.VehicleResponse;
+import com.cdk.modern.renting.vehicleservice.example.vehicle.response.TypeResponse;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

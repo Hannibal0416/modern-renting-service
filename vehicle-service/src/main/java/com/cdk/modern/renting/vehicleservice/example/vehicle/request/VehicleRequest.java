@@ -1,4 +1,4 @@
-package com.cdk.modern.renting.vehicleservice.vehicle.request;
+package com.cdk.modern.renting.vehicleservice.example.vehicle.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;

@@ -1,7 +1,5 @@
-package com.cdk.modern.renting.vehicleservice.vehicle.response;
+package com.cdk.modern.renting.vehicleservice.example.vehicle.response;
 
-import com.cdk.modern.renting.vehicleservice.domain.Brand;
-import com.cdk.modern.renting.vehicleservice.domain.Type;
 import java.time.LocalDateTime;
 import lombok.Data;
 
