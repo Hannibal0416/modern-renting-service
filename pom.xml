@@ -54,6 +54,7 @@
     <springdoc-openapi-webflux.version>2.5.0</springdoc-openapi-webflux.version>
     <postgres.version>42.7.3</postgres.version>
     <guava.version>33.2.0-jre</guava.version>
+    <r2dbc-postgresql.version>1.0.5.RELEASE</r2dbc-postgresql.version>
   </properties>
 
   <modules>
@@ -127,6 +128,11 @@
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>${guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>r2dbc-postgresql</artifactId>
+        <version>${r2dbc-postgresql.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

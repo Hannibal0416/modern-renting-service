@@ -10,6 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +26,11 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/vehicles")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class VehicleController {
+
+  private final VehicleService vehicleService;
 
   @Operation(summary = "Get a vehicle by id", description = "Returns a vehicle")
   @ApiResponses(value = {
@@ -33,9 +41,10 @@ public class VehicleController {
               schema = @Schema(implementation = ErrorResponse.class))})
   })
   @GetMapping(value = "/{id}", produces = "application/json")
-  @PreAuthorize("hasAnyAuthority('READ')")
-  public Mono<VehicleResponse> getVehicle(@PathVariable String id) {
-    return Mono.just(new VehicleResponse());
+//  @PreAuthorize("hasAnyAuthority('READ')")
+  public Mono<VehicleResponse> getVehicle(@PathVariable UUID id) {
+//    UUID uuid = UUID.fromString(id);
+    return vehicleService.findById(id);
   }
 
   @Operation(summary = "Get vehicles by name", description = "Returns vehicles")
@@ -48,9 +57,10 @@ public class VehicleController {
           @Content(mediaType = "application/json",
               schema = @Schema(implementation = ErrorResponse.class))})
   })
-  @PostMapping(produces = "application/json")
-  @PreAuthorize("hasAnyAuthority('READ')")
-  public Flux<VehicleResponse> getVehicles(@RequestBody @Valid VehicleRequest request) {
+  @GetMapping(produces = "application/json")
+//  @PreAuthorize("hasAnyAuthority('READ')")
+  public Flux<VehicleResponse> getVehicles(@Valid VehicleRequest request) {
+    log.info(request.toString());
     List<VehicleResponse> vehicleResponseList = List.of(
         new VehicleResponse(),
         new VehicleResponse()

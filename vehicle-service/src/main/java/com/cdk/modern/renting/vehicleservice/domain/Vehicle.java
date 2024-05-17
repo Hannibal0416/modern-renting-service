@@ -15,7 +15,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table()
+@Table
 public class Vehicle {
     @Id
     protected UUID id;
