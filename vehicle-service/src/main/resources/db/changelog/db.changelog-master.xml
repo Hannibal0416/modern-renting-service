@@ -51,11 +51,11 @@ http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibas
         </sql>
     </changeSet>
 
-    <include file="db/changelog/ddl/tables/h2/vehicle.sql" context="dev"/>
-    <include file="db/changelog/ddl/tables/vehicle.sql" context="docker"/>
-    <include file="db/changelog/ddl/tables/vehicle_type.sql" />
-    <include file="db/changelog/ddl/tables/vehicle_brand.sql" />
-    <include file="db/changelog/ddl/tables/vehicle_model.sql" />
+    <include file="db/changelog/ddl/h2/vehicle.sql" context="dev"/>
+    <include file="db/changelog/ddl/vehicle.sql" context="docker"/>
+    <include file="db/changelog/ddl/vehicle_type.sql" />
+    <include file="db/changelog/ddl/vehicle_brand.sql" />
+    <include file="db/changelog/ddl/vehicle_model.sql" />
 
     <include file="db/changelog/dml/dummy_vehicle_data.sql"/>
 </databaseChangeLog>
