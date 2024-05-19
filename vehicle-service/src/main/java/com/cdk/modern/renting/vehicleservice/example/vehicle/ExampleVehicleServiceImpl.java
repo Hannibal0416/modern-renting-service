@@ -4,7 +4,6 @@ import com.cdk.modern.renting.vehicleservice.domain.Brand;
 import com.cdk.modern.renting.vehicleservice.domain.Model;
 import com.cdk.modern.renting.vehicleservice.domain.Type;
 import com.cdk.modern.renting.vehicleservice.domain.Vehicle;
-import com.cdk.modern.renting.vehicleservice.example.vehicle.request.ExampleCreateTypeRequest;
 import com.cdk.modern.renting.vehicleservice.example.vehicle.request.ExampleCreateVehicleRequest;
 import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ExampleBrandResponse;
 import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ExampleModelResponse;
@@ -20,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -66,8 +64,9 @@ public class ExampleVehicleServiceImpl implements ExampleVehicleService {
         });
   }
 
+
   @Override
-//  @Transactional  //Option{name='readOnly', sensitive=false} + isn't supported in H2 at the transaction level. You must set it on conenction URL. See http://www.h2database.com/html/features.html#read_only
+//  @Transactional(rollbackFor = Exception.class)  //Option{name='readOnly', sensitive=false} + isn't supported in H2 at the transaction level. You must set it on conenction URL. See http://www.h2database.com/html/features.html#read_only
   public Mono<ExampleVehicleResponse> save(ExampleCreateVehicleRequest request) {
     Vehicle vehicle = new Vehicle();
     BeanUtils.copyProperties(request, vehicle);
@@ -92,7 +91,7 @@ public class ExampleVehicleServiceImpl implements ExampleVehicleService {
         modelRepository.save(model).subscribe(savedModel -> {
           BeanUtils.copyProperties(savedModel, modelResponse);
           vehicle.setModelId(savedModel.getId());
-          vechileRepository.save(vehicle).subscribe( savedVehicl ->{
+          vechileRepository.save(vehicle).subscribe(savedVehicl -> {
             BeanUtils.copyProperties(savedVehicl, vehicleResponse);
             modelResponse.setBrand(brandResponse);
             modelResponse.setType(typeResponse);
@@ -103,6 +102,50 @@ public class ExampleVehicleServiceImpl implements ExampleVehicleService {
       });
 
       return Mono.just(vehicleResponse);
+    });
+  }
+
+  public Mono<ExampleVehicleResponse> saveFailure(ExampleCreateVehicleRequest request) {
+    Vehicle vehicle = new Vehicle();
+    BeanUtils.copyProperties(request, vehicle);
+    Brand brand = new Brand();
+    BeanUtils.copyProperties(request.getModel().getBrand(), brand);
+
+    Mono<ExampleBrandResponse> brandResponseMono = brandRepository.save(brand)
+        .flatMap(savedBrand -> {
+          ExampleBrandResponse brandResponse = new ExampleBrandResponse();
+          BeanUtils.copyProperties(savedBrand, brandResponse);
+          return Mono.just(brandResponse);
+        });
+
+    Type type = new Type();
+    BeanUtils.copyProperties(request.getModel().getType(), type);
+    Mono<ExampleVehicleResponse> vehicleResponseMono = typeRepository.save(type)
+        .flatMap(savedType -> {
+          ExampleTypeResponse typeResponse = new ExampleTypeResponse();
+          ExampleModelResponse modelResponse = new ExampleModelResponse();
+          ExampleVehicleResponse vehicleResponse = new ExampleVehicleResponse();
+
+          BeanUtils.copyProperties(savedType, typeResponse);
+          Model model = new Model();
+          BeanUtils.copyProperties(request.getModel(), model);
+          brandResponseMono.subscribe(brandResponse -> model.setBrandId(brandResponse.getId()));
+          model.setTypeId(savedType.getId());
+          modelRepository.save(model).subscribe(savedModel -> {
+            BeanUtils.copyProperties(savedModel, modelResponse);
+            vehicle.setModelId(savedModel.getId());
+            vechileRepository.save(vehicle).subscribe(savedVehicl -> {
+              BeanUtils.copyProperties(savedVehicl, vehicleResponse);
+              modelResponse.setType(typeResponse);
+              vehicleResponse.setModel(modelResponse);
+            });
+          });
+          return Mono.just(vehicleResponse);
+        });
+
+    return vehicleResponseMono.zipWith(brandResponseMono).flatMap(tuple -> {
+      tuple.getT1().getModel().setBrand(tuple.getT2());
+      return Mono.just(tuple.getT1());
     });
   }
 }

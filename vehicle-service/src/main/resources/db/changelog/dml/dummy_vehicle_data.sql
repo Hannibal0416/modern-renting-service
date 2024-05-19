@@ -21,7 +21,7 @@ INSERT INTO vehicle(id, model_id, rent_price, name, color, production_year, seat
 ('ef9cd5a7-a80e-4a91-9ce7-2d0349da37a7', 30000, 6000, 'Allen', 'Blue', 2020, 5, 'AT', '95'),
 ('d17eb127-8fee-4ebe-94ea-5c01dde9d26f', 40000, 8000, 'Ricky', 'Yellow', 2018, 4, 'MT', '98');
 
---changeset application:1 context:docker
+--changeset application:2 context:docker
 SELECT SETVAL(pg_get_serial_sequence('vehicle_brand', 'id'), (SELECT MAX(id) FROM vehicle_brand));
 SELECT SETVAL(pg_get_serial_sequence('vehicle_model', 'id'), (SELECT MAX(id) FROM vehicle_model));
 SELECT SETVAL(pg_get_serial_sequence('vehicle_type', 'id'), (SELECT MAX(id) FROM vehicle_type));
