@@ -12,4 +12,6 @@ public interface ExampleVehicleService {
   Flux<ExampleVehicleResponse> findAll(Integer offset, Integer limit);
 
   Mono<ExampleVehicleResponse> save(ExampleCreateVehicleRequest request);
+
+  Mono<ExampleVehicleResponse> saveFailure(ExampleCreateVehicleRequest request);
 }
