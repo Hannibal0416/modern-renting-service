@@ -1,0 +1,96 @@
+@startuml
+skinparam backgroundColor #EEEBDC
+skinparam handwritten false
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+actor User
+participant "Frontend App" as Frontend
+participant "Vehicle Service" as VehicleService
+participant "Redis" as Redis
+participant "Database" as Database
+
+autonumber 1
+User -> Frontend: Log in
+activate Frontend
+
+Frontend -> VehicleService: GET /vehicle/typeAndBrand
+activate VehicleService
+
+VehicleService -> Redis: get(typeAndBrand)
+activate Redis
+alt cache hit
+   Redis --> VehicleService: response(typeAndBrand)
+else cache doesn't hit
+   Redis --> VehicleService: response(not found)
+   deactivate Redis
+   VehicleService -> Database: query(typeAndBrand)
+   activate Database
+   Database --> VehicleService: response(typeAndBrand)
+   deactivate Database
+end
+
+VehicleService --> Frontend: response(type, brand)
+deactivate VehicleService
+
+alt choose by type
+    Frontend -> VehicleService: GET /vehicle/type/{typeId}
+    activate VehicleService
+
+    VehicleService -> Redis: get(typeId)
+    activate Redis
+    alt cache hit
+       Redis --> VehicleService: response(type)
+    else cache doesn't hit
+       Redis --> VehicleService: response(not found)
+       deactivate Redis
+       VehicleService -> Database: query(typeId)
+       activate Database
+       Database --> VehicleService: response(type)
+       deactivate Database
+    end
+
+    VehicleService -> Frontend: response(models)
+    deactivate VehicleService
+else choose by brand
+    Frontend -> VehicleService: GET /vehicle/brand/{brandId}
+    activate VehicleService
+
+    VehicleService -> Redis: get(brandId)
+    activate Redis
+    alt cache hit
+       Redis --> VehicleService: response(brand)
+    else cache doesn't hit
+       Redis --> VehicleService: response(not found)
+       deactivate Redis
+       VehicleService -> Database: query(brandId)
+       activate Database
+       Database --> VehicleService: response(brand)
+       deactivate Database
+    end
+
+    VehicleService -> Frontend: response(models)
+    deactivate VehicleService
+end
+
+Frontend -> VehicleService : GET /vehicle/model/{modelId}
+activate VehicleService
+VehicleService -> Database : query(modelId)
+activate Database
+Database -> VehicleService: response(vehicle)
+deactivate Database
+VehicleService -> Frontend: response(vehicle)
+deactivate VehicleService
+
+Frontend -> VehicleService : GET /vehicle/{vehicleId}
+activate VehicleService
+VehicleService -> Database : query(vehicleId)
+activate Database
+Database -> VehicleService: response(vehicleDetails)
+deactivate Database
+VehicleService -> Frontend: response(vehicleDetails)
+deactivate VehicleService
+
+@enduml

@@ -1,0 +1,44 @@
+@startuml
+skinparam backgroundColor #EEEBDC
+skinparam handwritten false
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+actor User
+participant "Frontend App" as Frontend
+participant "Vehicle Service" as VehicleService
+
+autonumber 1
+User -> Frontend: Log in
+activate Frontend
+
+Frontend -> VehicleService: GET /vehicle/typeAndBrand
+activate VehicleService
+
+VehicleService --> Frontend: response(type, brand)
+deactivate VehicleService
+alt choose by type
+    Frontend -> VehicleService: GET /vehicle/type/{typeId}
+    activate VehicleService
+    VehicleService -> Frontend: response(models)
+    deactivate VehicleService
+else choose by brand
+    Frontend -> VehicleService: GET /vehicle/brand/{brandId}
+    activate VehicleService
+    VehicleService -> Frontend: response(models)
+    deactivate VehicleService
+end
+
+Frontend -> VehicleService : GET /vehicle/model/{modelId}
+activate VehicleService
+VehicleService -> Frontend: response(vehicle)
+deactivate VehicleService
+
+Frontend -> VehicleService : GET /vehicle/{vehicleId}
+activate VehicleService
+VehicleService -> Frontend: response(vehicleDetails)
+deactivate VehicleService
+
+@enduml
