@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity.CsrfSpec;
 import org.springframework.security.oauth2.server.resource.introspection.ReactiveOpaqueTokenAuthenticationConverter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
@@ -12,12 +13,12 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableReactiveMethodSecurity(useAuthorizationManager = true)
 @EnableWebFluxSecurity
 public class SecurityConfiguration {
-    private static final String ACTUATOR_ENDPOINT_PATTERN = "/actuator/*";
-    private static final String SWAGGER_ENDPOINT_PATTERN = "/swagger-ui/*";
+
     @Bean
     public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http,
         ReactiveOpaqueTokenAuthenticationConverter opaqueTokenAuthenticationConverter, OAuth2Properties oAuth2Properties
     ) {
+        http.csrf(CsrfSpec::disable);
         http.oauth2ResourceServer(
           auth -> auth
               .opaqueToken(
@@ -28,16 +29,11 @@ public class SecurityConfiguration {
               )
         );
 
-
         http.authorizeExchange(
             authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
-                    .pathMatchers(ACTUATOR_ENDPOINT_PATTERN)
-                    .permitAll()
-                    .pathMatchers(SWAGGER_ENDPOINT_PATTERN)
-                    .permitAll()
                     .anyExchange()
-                    .authenticated()
+                    .permitAll()
         );
 
         return http.build();

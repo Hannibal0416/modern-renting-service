@@ -7,6 +7,25 @@ oauth2:
   introspectionUri: http://localhost:9000/oauth2/introspect
 
 spring:
+  config:
+    activate:
+      on-profile: dev
   application:
     name: oauth2
+  r2dbc:
+    url: r2dbc:h2:file:///./testdb;MODE=PostgreSQL;
+    username: postgres
+    password: postgres
+  liquibase:
+    contexts: dev
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    url: jdbc:h2:file:./testdb;MODE=PostgreSQL;
+    user: postgres
+    password: postgres
+
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui/index.html
 

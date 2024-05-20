@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+    <changeSet author="mockdata" id="0" runAlways="true" >
+        <sql dbms="postgresql" endDelimiter="/">
+            DO $$
+            DECLARE
+            seq RECORD;
+            tab RECORD;
+            hasTablesToTruncate int;
+            hasSequencesToReset int;
+            BEGIN
+            select count(*)
+            into hasSequencesToReset
+            from pg_sequences
+            where schemaname = current_schema();
+
+            select count(*)
+            into hasTablesToTruncate
+            from pg_tables
+            where schemaname = current_schema()
+            and tablename not like 'databasechangelog%';
+
+            if (hasSequencesToReset > 0) then
+            FOR seq IN (SELECT sequencename
+            from pg_sequences
+            where schemaname = current_schema())
+            LOOP
+            EXECUTE 'alter sequence ' || quote_ident(seq.sequencename) || ' start with 100';
+            END LOOP;
+            end if;
+
+            if (hasTablesToTruncate > 0) then
+            FOR tab IN (SELECT tablename
+            from pg_tables
+            where schemaname = current_schema()
+            and tablename not like 'databasechangelog%')
+            LOOP
+            EXECUTE 'truncate table ' || quote_ident(tab.tablename) || ' restart identity cascade';
+            END LOOP;
+            end if;
+            END $$
+            /
+        </sql>
+    </changeSet>
+
+    <include file="db/changelog/ddl/h2/vehicle.sql" context="dev"/>
+    <include file="db/changelog/ddl/vehicle.sql" context="docker"/>
+    <include file="db/changelog/ddl/vehicle_type.sql" />
+    <include file="db/changelog/ddl/vehicle_brand.sql" />
+    <include file="db/changelog/ddl/vehicle_model.sql" />
+
+    <include file="db/changelog/dml/dummy_vehicle_data.sql"/>
+</databaseChangeLog>

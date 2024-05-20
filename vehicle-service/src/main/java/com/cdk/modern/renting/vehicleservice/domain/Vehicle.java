@@ -1,6 +1,7 @@
 package com.cdk.modern.renting.vehicleservice.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,13 +14,14 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table()
+@Table
 public class Vehicle {
-    @Id
+//    @Id
     protected UUID id;
-
+//    @Id
     @Column
     private Integer modelId;
 
@@ -30,7 +32,7 @@ public class Vehicle {
     private String imageUri;
 
     @Column
-    private String rentPrice;
+    private Integer rentPrice;
 
     @Column
     private String name;

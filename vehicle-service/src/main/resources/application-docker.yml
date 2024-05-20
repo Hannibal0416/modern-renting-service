@@ -1,6 +1,29 @@
 server:
   port: 8080
 
+oauth2:
+  clientId: service-client
+  clientSecret: "service-secret"
+  introspectionUri: http://oauth2:8080/oauth2/introspect
+
 spring:
+  config:
+    activate:
+      on-profile: docker
   application:
     name: oauth2
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/vehicledb
+    username: postgres
+    password: postgres
+  liquibase:
+    contexts: docker
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    url:  jdbc:postgresql://localhost:5432/vehicledb
+    user: postgres
+    password: postgres
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui/index.html
