@@ -14,29 +14,29 @@ autonumber 1
 User -> Frontend: Log in
 activate Frontend
 
-Frontend -> VehicleService: GET /vehicles/typesAndBrands
+Frontend -> VehicleService: GET /vehicle/typeAndBrand
 activate VehicleService
 
-VehicleService --> Frontend: response(types, brands)
+VehicleService --> Frontend: response(type, brand)
 deactivate VehicleService
 alt choose by type
-    Frontend -> VehicleService: GET /vehicles/types/{typeId}
+    Frontend -> VehicleService: GET /vehicle/type/{typeId}
     activate VehicleService
     VehicleService -> Frontend: response(models)
     deactivate VehicleService
 else choose by brand
-    Frontend -> VehicleService: GET /vehicles/brands/{brandId}
+    Frontend -> VehicleService: GET /vehicle/brand/{brandId}
     activate VehicleService
     VehicleService -> Frontend: response(models)
     deactivate VehicleService
 end
 
-Frontend -> VehicleService : GET /vehicles/model/{modelId}
+Frontend -> VehicleService : GET /vehicle/model/{modelId}
 activate VehicleService
-VehicleService -> Frontend: response(vehicles)
+VehicleService -> Frontend: response(vehicle)
 deactivate VehicleService
 
-Frontend -> VehicleService : GET /vehicles/{vehicleId}
+Frontend -> VehicleService : GET /vehicle/{vehicleId}
 activate VehicleService
 VehicleService -> Frontend: response(vehicleDetails)
 deactivate VehicleService
