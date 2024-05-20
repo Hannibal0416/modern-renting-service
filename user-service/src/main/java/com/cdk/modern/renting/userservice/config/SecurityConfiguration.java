@@ -7,6 +7,7 @@ import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.client.RestTemplate;
@@ -16,40 +17,52 @@ import org.springframework.web.client.RestTemplate;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http,
-        OpaqueTokenAuthenticationConverter opaqueTokenAuthenticationConverter, OAuth2Properties oAuth2Properties
-    ) throws Exception {
-        http.oauth2ResourceServer(
-          auth -> auth
-              .opaqueToken(
-                  opaqueTokenConfigurer -> opaqueTokenConfigurer
-                      .introspectionUri(oAuth2Properties.getIntrospectionUri())
-                      .introspectionClientCredentials(oAuth2Properties.getClientId(), oAuth2Properties.getClientSecret())
-                      .authenticationConverter(opaqueTokenAuthenticationConverter)
-              )
-        );
+  @Bean
+  public SecurityFilterChain securityFilterChain(
+      HttpSecurity http,
+      OpaqueTokenAuthenticationConverter opaqueTokenAuthenticationConverter,
+      OAuth2Properties oAuth2Properties)
+      throws Exception {
+    http.oauth2ResourceServer(
+        auth ->
+            auth.opaqueToken(
+                opaqueTokenConfigurer ->
+                    opaqueTokenConfigurer
+                        .introspectionUri(oAuth2Properties.getIntrospectionUri())
+                        .introspectionClientCredentials(
+                            oAuth2Properties.getClientId(), oAuth2Properties.getClientSecret())
+                        .authenticationConverter(opaqueTokenAuthenticationConverter)));
 
-        http.authorizeHttpRequests(
-            authorizationManagerRequestMatcherRegistry ->
-                authorizationManagerRequestMatcherRegistry
-                    .requestMatchers(HttpMethod.GET,"/users").authenticated()
-                    .requestMatchers(HttpMethod.PUT,"/users").authenticated()
-                    .anyRequest().permitAll()
-        );
+    http.authorizeHttpRequests(
+        authorizationManagerRequestMatcherRegistry ->
+            authorizationManagerRequestMatcherRegistry
+                .requestMatchers(HttpMethod.GET, "/users")
+                .authenticated()
+                .requestMatchers(HttpMethod.PUT, "/users")
+                .authenticated()
+                .anyRequest()
+                .permitAll());
+    http.csrf(csrfConfigurer -> csrfConfigurer.ignoringRequestMatchers("/h2-console/**"))
+        .headers(
+            httpSecurityHeadersConfigurer ->
+                httpSecurityHeadersConfigurer.frameOptions(
+                    HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+    return http.build();
+  }
 
-        return http.build();
-    }
+  @Bean
+  public OpaqueTokenAuthenticationConverter opaqueTokenAuthenticationConverter() {
+    return new CustomOpaqueTokenAuthenticationConverter();
+  }
 
-    @Bean
-    public OpaqueTokenAuthenticationConverter opaqueTokenAuthenticationConverter() {
-        return new CustomOpaqueTokenAuthenticationConverter();
-    }
-
-    @Bean
-    public RestTemplate restTemplate(OAuth2Properties oAuth2Properties) {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(oAuth2Properties.getClientId(), oAuth2Properties.getClientSecret()));
-        return restTemplate;
-    }
+  @Bean
+  public RestTemplate restTemplate(OAuth2Properties oAuth2Properties) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate
+        .getInterceptors()
+        .add(
+            new BasicAuthenticationInterceptor(
+                oAuth2Properties.getClientId(), oAuth2Properties.getClientSecret()));
+    return restTemplate;
+  }
 }
