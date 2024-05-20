@@ -6,9 +6,9 @@ INSERT INTO vehicle_type (id, name, image_uri) VALUES
 (100002, 'Sedan', 'https://en.wikipedia.org/wiki/File:1928_Model_A_Ford.jpg');
 
 INSERT INTO vehicle_brand (id, name, image_uri) VALUES
-(100001, 'Honda', 'https://en.wikipedia.org/wiki/File:Honda_Canada.webp'),
-(100002, 'Porsche', 'https://en.wikipedia.org/wiki/File:Porsche_logo.svg'),
-(100003, 'Toyota', 'https://en.wikipedia.org/wiki/File:Porsche_logo.svg');
+(100001, 'Honda', 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Honda_logo.svg/220px-Honda_logo.svg.png'),
+(100002, 'Porsche', 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Porsche_logo.svg/200px-Porsche_logo.svg.png'),
+(100003, 'Toyota', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Toyota.svg/220px-Toyota.svg.png');
 
 INSERT INTO vehicle_model(id, type_id, brand_id, name, image_uri) VALUES
 (100001, 100001, 100001, 'CR-V', 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/2023_Honda_CR-V_EX_AWD_in_Lunar_Silver_Metallic%2C_front_left.jpg/560px-2023_Honda_CR-V_EX_AWD_in_Lunar_Silver_Metallic%2C_front_left.jpg'),
