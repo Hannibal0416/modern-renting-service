@@ -35,7 +35,6 @@ class UserServiceTest extends Specification {
     def 'should add new user'() {
         given:
         UserCreateRequest user = new UserCreateRequest(username: "123")
-        UserInfoResponse userInfo = new UserInfoResponse(username: "123")
 
 
         Role roleDomain = new Role(id: 1, name: "USER")
@@ -51,7 +50,7 @@ class UserServiceTest extends Specification {
 
         then:
         with(result) {
-            username: 123
+            username == "123"
         }
     }
 }
