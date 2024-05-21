@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
 @Repository
-public interface ExampleVechileRepository extends R2dbcRepository<Vehicle, UUID>,ExampleCustomVehicleRepository {
+public interface ExampleVehicleRepository extends R2dbcRepository<Vehicle, UUID>,ExampleCustomVehicleRepository {
 
   Flux<Vehicle> findBy(Pageable pageable);
 }

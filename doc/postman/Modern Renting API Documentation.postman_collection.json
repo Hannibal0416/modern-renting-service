@@ -272,7 +272,49 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "xwk3z0RwvNfd1hw8FI4C5NhHH6ZlqaLH74sr2hC2M4WSJNcyfhohvRHcMQUfYlf2ZGAhUzGesaXXZdR8lYWM-jsvy61UeZvFoSgjcVo54f8BciOHoAOCtX6x4ua2Mnne",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\":\"newsecret\",\r\n    \"email\":\"new@userservice.com\",\r\n    \"phone\":\"0911123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8081/users",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
 				}
+
 			]
 		}
 	],
