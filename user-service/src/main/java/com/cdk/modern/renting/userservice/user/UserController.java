@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -67,8 +66,8 @@ public class UserController {
       })
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public ResponseEntity<UserInfoResponse> createUser(@Valid UserCreateRequest userCreateRequest) {
-    return new ResponseEntity<>(userService.createUser(userCreateRequest), HttpStatus.CREATED);
+  public UserInfoResponse createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
+    return userService.createUser(userCreateRequest);
   }
 
   @Operation(summary = "update the user", description = "Returns the user's information")

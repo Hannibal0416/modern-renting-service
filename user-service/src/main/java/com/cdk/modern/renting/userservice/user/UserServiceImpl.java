@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
   private User toDomain(UserCreateRequest userInfo) {
     User user = new User();
     user.setUsername(userInfo.getUsername());
-    user.setPassword("{noop}" + userInfo.getPassword());
+    user.setPassword(PasswordUtils.prependNoop(userInfo.getPassword()));
     user.setEmail(userInfo.getEmail());
     user.setPhone(userInfo.getPhone());
     user.setActive(true);
