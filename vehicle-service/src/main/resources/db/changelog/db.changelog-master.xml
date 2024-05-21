@@ -8,6 +8,13 @@
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
 http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
 http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <include file="db/changelog/ddl/h2/vehicle.sql" context="dev"/>
+    <include file="db/changelog/ddl/vehicle.sql" context="docker"/>
+    <include file="db/changelog/ddl/vehicle_type.sql" />
+    <include file="db/changelog/ddl/vehicle_brand.sql" />
+    <include file="db/changelog/ddl/vehicle_model.sql" />
+
     <changeSet author="mockdata" id="0" runAlways="true" context="docker" >
         <sql dbms="postgresql" endDelimiter="/">
             DO $$
@@ -59,12 +66,6 @@ http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibas
             delete from vehicle_type;
         </sql>
     </changeSet>
-
-    <include file="db/changelog/ddl/h2/vehicle.sql" context="dev"/>
-    <include file="db/changelog/ddl/vehicle.sql" context="docker"/>
-    <include file="db/changelog/ddl/vehicle_type.sql" />
-    <include file="db/changelog/ddl/vehicle_brand.sql" />
-    <include file="db/changelog/ddl/vehicle_model.sql" />
 
     <include file="db/changelog/dml/dummy_vehicle_data.sql"/>
 </databaseChangeLog>
