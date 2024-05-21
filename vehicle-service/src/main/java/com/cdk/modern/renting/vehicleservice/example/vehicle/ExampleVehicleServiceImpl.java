@@ -28,27 +28,38 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class ExampleVehicleServiceImpl implements ExampleVehicleService {
 
-  private final ExampleVechileRepository vechileRepository;
+  private final ExampleVehicleRepository vehicleRepository;
   private final ExampleBrandRepository brandRepository;
   private final ExampleModelRepository modelRepository;
   private final ExampleTypeRepository typeRepository;
 
   @Override
   public Mono<ExampleVehicleResponse> findById(UUID id) {
-    return vechileRepository
+    return vehicleRepository
         .findVehicleById(id)
         .switchIfEmpty(Mono.error(new DataRetrievalFailureException("Not Found")))
         .map(Optional::of)
         .flatMap(
             optionalVehicle -> {
               ExampleVehicleResponse vehicleResponse = new ExampleVehicleResponse();
-              BeanUtils.copyProperties(optionalVehicle.get(), vehicleResponse);
               ExampleModelResponse modelResponse = new ExampleModelResponse();
-              BeanUtils.copyProperties(optionalVehicle.get().getModel(), modelResponse);
               ExampleBrandResponse brandResponse = new ExampleBrandResponse();
-              BeanUtils.copyProperties(optionalVehicle.get().getModel().getBrand(), brandResponse);
               ExampleTypeResponse typeResponse = new ExampleTypeResponse();
-              BeanUtils.copyProperties(optionalVehicle.get().getModel().getType(), typeResponse);
+              optionalVehicle.ifPresent(
+                  vehicle -> {
+                    BeanUtils.copyProperties(vehicle, vehicleResponse);
+                    Optional.ofNullable(vehicle.getModel())
+                        .ifPresent(
+                            model -> {
+                              BeanUtils.copyProperties(model, modelResponse);
+                              Optional.ofNullable(model.getBrand())
+                                  .ifPresent(
+                                      brand -> BeanUtils.copyProperties(brand, brandResponse));
+                              Optional.ofNullable(model.getType())
+                                  .ifPresent(type -> BeanUtils.copyProperties(type, typeResponse));
+                            });
+                  });
+
               modelResponse.setBrand(brandResponse);
               modelResponse.setType(typeResponse);
               vehicleResponse.setModel(modelResponse);
@@ -59,7 +70,7 @@ public class ExampleVehicleServiceImpl implements ExampleVehicleService {
   @Override
   public Flux<ExampleVehicleResponse> findAll(Integer offset, Integer limit) {
     Pageable pageable = PageRequest.of(offset, limit, Sort.by("createdAt"));
-    return vechileRepository
+    return vehicleRepository
         .findBy(pageable)
         .flatMap(
             vehicle -> {
@@ -76,9 +87,15 @@ public class ExampleVehicleServiceImpl implements ExampleVehicleService {
   //  @Transactional
   public Mono<ExampleVehicleResponse> save(ExampleCreateVehicleRequest request) {
     Brand brand = new Brand();
-    BeanUtils.copyProperties(request.getModel().getBrand(), brand);
     Type type = new Type();
-    BeanUtils.copyProperties(request.getModel().getType(), type);
+    Optional.ofNullable(request.getModel())
+        .ifPresent(
+            model -> {
+              Optional.ofNullable(model.getBrand())
+                  .ifPresent(brandReq -> BeanUtils.copyProperties(brandReq, brand));
+              Optional.ofNullable(model.getType())
+                  .ifPresent(typeReq -> BeanUtils.copyProperties(typeReq, type));
+            });
 
     return brandRepository
         .save(brand)
@@ -100,9 +117,13 @@ public class ExampleVehicleServiceImpl implements ExampleVehicleService {
         .map(
             tuple -> {
               Model model = new Model();
-              BeanUtils.copyProperties(request.getModel(), model);
-              model.setBrandId(tuple.getT1().getId());
-              model.setTypeId(tuple.getT2().getId());
+              Optional.ofNullable(request.getModel())
+                  .ifPresent(
+                      modelReq -> {
+                        BeanUtils.copyProperties(modelReq, model);
+                        model.setBrandId(tuple.getT1().getId());
+                        model.setTypeId(tuple.getT2().getId());
+                      });
               return modelRepository
                   .save(model)
                   .map(
@@ -114,20 +135,19 @@ public class ExampleVehicleServiceImpl implements ExampleVehicleService {
             })
         .flatMap(
             modelMono ->
-                modelMono.map(
+                modelMono.flatMap(
                     savedModel -> {
                       Vehicle vehicle = new Vehicle();
                       BeanUtils.copyProperties(request, vehicle);
                       vehicle.setModelId(savedModel.getId());
                       ExampleVehicleResponse vehicleResponse = new ExampleVehicleResponse();
-                      vechileRepository
+                      return vehicleRepository
                           .save(vehicle)
                           .map(
                               savedVehicle -> {
                                 BeanUtils.copyProperties(savedVehicle, vehicleResponse);
                                 return vehicleResponse;
                               });
-                      return vehicleResponse;
                     }))
         .doOnError(ex -> log.error("err :", ex));
   }
@@ -173,7 +193,7 @@ public class ExampleVehicleServiceImpl implements ExampleVehicleService {
                           savedModel -> {
                             BeanUtils.copyProperties(savedModel, modelResponse);
                             vehicle.setModelId(savedModel.getId());
-                            vechileRepository
+                            vehicleRepository
                                 .save(vehicle)
                                 .subscribe(
                                     savedVehicl -> {
