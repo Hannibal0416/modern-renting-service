@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service
-public class MetadataServiceImpl implements MetadataService {
+public class ModelServiceImpl implements ModelService {
 
   private final ModelRepository modelRepository;
 

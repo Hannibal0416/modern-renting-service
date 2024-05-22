@@ -30,7 +30,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class MetadataController {
 
-    private final MetadataService metadataService;
+    private final ModelService modelService;
 
     @Operation(summary = "Get types", description = "Returns all types")
     @ApiResponses(value = {
@@ -73,7 +73,7 @@ public class MetadataController {
     })
     @GetMapping(value = "model", produces = "application/json")
     Flux<ModelResponse> getModels(FindModelRequest request) {
-        return metadataService.findModels(request);
+        return modelService.findModels(request);
     }
 
     @Operation(summary = "Create new model", description = "Create new model")
