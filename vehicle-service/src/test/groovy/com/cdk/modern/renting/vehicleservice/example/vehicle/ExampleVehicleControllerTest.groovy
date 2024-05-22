@@ -7,6 +7,7 @@ import com.cdk.modern.renting.vehicleservice.domain.Vehicle
 import com.cdk.modern.renting.vehicleservice.example.vehicle.request.ExampleCreateVehicleRequest
 import com.cdk.modern.renting.vehicleservice.example.vehicle.request.ExampleVehicleRequest
 import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ExampleVehicleResponse
+import com.cdk.modern.renting.vehicleservice.metadata.ModelRepository
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
@@ -31,7 +32,7 @@ class ExampleVehicleControllerIntegrationTest extends Specification {
     ExampleVehicleRepository vehicleRepository = Mock()
 
     @SpringBean
-    ExampleModelRepository modelRepository = Mock()
+    ModelRepository modelRepository = Mock()
 
     @SpringBean
     ExampleTypeRepository typeRepository = Mock()

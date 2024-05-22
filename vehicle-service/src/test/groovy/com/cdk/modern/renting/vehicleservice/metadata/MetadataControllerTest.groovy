@@ -38,11 +38,11 @@ class MetadataControllerTest extends Specification {
 
     def "when 'find models by filters' is performed then the response should have a 200 status"() {
         given: "A user needs to retrieve the model details"
-        baseModelUrl += "?brandId=1&typeId=1"
-        when: ""
+        baseModelUrl += "?brandId=" + brandId + "&typeId=" + typeId
+        when: "Accessing the 'find models by filters' endpoint"
         def responseSpec = webTestClient.get().uri(baseModelUrl).exchange()
 
-        then: ""
+        then: "the response has a 200 status and the size of the response is 2"
         verifyAll(responseSpec) {
             responseSpec.expectStatus().is2xxSuccessful()
             responseSpec.expectBody(List<ModelResponse>).consumeWith {
@@ -53,5 +53,8 @@ class MetadataControllerTest extends Specification {
                     }
             }
         }
+        where:
+        brandId << 1
+        typeId << 1
     }
 }
