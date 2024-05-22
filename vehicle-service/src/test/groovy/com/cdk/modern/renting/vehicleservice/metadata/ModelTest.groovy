@@ -15,7 +15,7 @@ import spock.lang.Specification
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-class ModelControllerTest extends Specification {
+class ModelTest extends Specification {
     @Autowired
     WebTestClient webTestClient
 
