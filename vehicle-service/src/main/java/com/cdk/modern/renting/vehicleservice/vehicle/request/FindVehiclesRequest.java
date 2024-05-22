@@ -10,14 +10,18 @@ import lombok.ToString;
 @ToString
 public class FindVehiclesRequest {
   @Schema(name = "typeId", example = "100001", requiredMode = RequiredMode.NOT_REQUIRED)
-  private String typeId;
+  private Integer typeId;
 
   @Schema(name = "brandId", example = "100001", requiredMode = RequiredMode.NOT_REQUIRED)
-  private String brandId;
+  private Integer brandId;
 
   @Schema(name = "modelName", example = "Cayenne", maxLength = 255, requiredMode = RequiredMode.NOT_REQUIRED)
   @Max(255)
   private String modelName;
+
+  @Schema(name = "modelId", example = "1", maxLength = 255, requiredMode = RequiredMode.NOT_REQUIRED)
+  @Max(255)
+  private String modelId;
 
   @Schema(name = "name", example = "Hannibal", maxLength = 255, requiredMode = RequiredMode.NOT_REQUIRED)
   @Max(255)
