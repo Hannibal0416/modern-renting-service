@@ -13,7 +13,7 @@ public class VehicleResponse {
   protected UUID id;
   private ModelResponse model;
   private String imageUri;
-  private String rentPrice;
+  private Integer rentPrice;
   private String name;
   private String color;
   private Short productionYear;
