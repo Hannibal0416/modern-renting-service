@@ -16,17 +16,20 @@ public class VehicelServiceImpl implements VehicleService {
   private final VehicleRepository vehicleRepository;
 
   @Override
-  public Mono<VehicleResponse> create(CreateVehicleRequest request) {
-    Vehicle vehicle = Vehicle.builder().build();
-    BeanUtils.copyProperties(request, vehicle);
+  public Mono<VehicleResponse> create(Mono<CreateVehicleRequest> requestMono) {
 
-    return vehicleRepository
-        .save(vehicle)
-        .map(
-            savedVehicle -> {
-              VehicleResponse vehicleResponse = new VehicleResponse();
-              BeanUtils.copyProperties(savedVehicle, vehicleResponse);
-              return vehicleResponse;
-            });
+    return requestMono.flatMap(
+        request -> {
+          Vehicle vehicle = Vehicle.builder().build();
+          BeanUtils.copyProperties(request, vehicle);
+          return vehicleRepository
+              .save(vehicle)
+              .map(
+                  savedVehicle -> {
+                    VehicleResponse vehicleResponse = new VehicleResponse();
+                    BeanUtils.copyProperties(savedVehicle, vehicleResponse);
+                    return vehicleResponse;
+                  });
+        });
   }
 }

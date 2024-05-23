@@ -12,7 +12,10 @@ import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ExampleVeh
 import java.util.Optional;
 import java.util.UUID;
 
+import com.cdk.modern.renting.vehicleservice.metadata.BrandRepository;
 import com.cdk.modern.renting.vehicleservice.metadata.ModelRepository;
+import com.cdk.modern.renting.vehicleservice.metadata.TypeRepository;
+import com.cdk.modern.renting.vehicleservice.vehicle.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -30,14 +33,15 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class ExampleVehicleServiceImpl implements ExampleVehicleService {
 
-  private final ExampleVehicleRepository vehicleRepository;
-  private final ExampleBrandRepository brandRepository;
+  private final ExampleCustomVehicleRepository customVehicleRepository;
+  private final VehicleRepository vehicleRepository;
+  private final BrandRepository brandRepository;
   private final ModelRepository modelRepository;
-  private final ExampleTypeRepository typeRepository;
+  private final TypeRepository typeRepository;
 
   @Override
   public Mono<ExampleVehicleResponse> findById(UUID id) {
-    return vehicleRepository
+    return customVehicleRepository
         .findVehicleById(id)
         .switchIfEmpty(Mono.error(new DataRetrievalFailureException("Not Found")))
         .map(Optional::of)

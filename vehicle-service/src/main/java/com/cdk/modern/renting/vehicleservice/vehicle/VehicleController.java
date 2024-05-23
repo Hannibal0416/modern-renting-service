@@ -16,8 +16,11 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -109,7 +112,7 @@ public class VehicleController {
       })
   @PostMapping(value = "vehicle", produces = "application/json", consumes = "application/json")
   @PreAuthorize("hasAnyAuthority('WRITE')")
-  public Mono<VehicleResponse> create(@RequestBody CreateVehicleRequest request) {
+  public Mono<VehicleResponse> create(@Valid @RequestBody Mono<CreateVehicleRequest> request) {
     return vehicleService.create(request);
   }
 
@@ -137,7 +140,7 @@ public class VehicleController {
   @PutMapping(value = "vehicle/{id}", produces = "application/json", consumes = "application/json")
   //  @PreAuthorize("hasAnyAuthority('WRITE')")
   public Mono<VehicleResponse> update(
-      @PathVariable UUID id, @RequestBody UpdateVehicleRequest request) {
+      @PathVariable UUID id, @Valid @RequestBody UpdateVehicleRequest request) {
     return null;
   }
 }

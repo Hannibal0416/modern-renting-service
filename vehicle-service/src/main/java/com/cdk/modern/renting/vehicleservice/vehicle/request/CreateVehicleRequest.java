@@ -8,7 +8,10 @@ import lombok.Data;
 @Data
 @JsonInclude(Include.NON_NULL)
 public class CreateVehicleRequest {
-  @NotNull private Integer modelId;
+  @NotNull
+  @Min(value = 1)
+  @Max(value = 999999)
+  private Integer modelId;
 
   private String imageUri;
 
@@ -16,7 +19,7 @@ public class CreateVehicleRequest {
   @Size(min = 3, max = 255)
   private String name;
 
-  @NotEmpty
+  @NotNull
   @Min(value = 0)
   @Max(value = 999999)
   private Integer rentPrice;

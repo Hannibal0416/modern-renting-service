@@ -5,5 +5,5 @@ import com.cdk.modern.renting.vehicleservice.vehicle.response.VehicleResponse;
 import reactor.core.publisher.Mono;
 
 public interface VehicleService {
-  Mono<VehicleResponse> create(CreateVehicleRequest request);
+  Mono<VehicleResponse> create(Mono<CreateVehicleRequest> request);
 }

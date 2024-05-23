@@ -7,7 +7,10 @@ import com.cdk.modern.renting.vehicleservice.domain.Vehicle
 import com.cdk.modern.renting.vehicleservice.example.vehicle.request.ExampleCreateVehicleRequest
 import com.cdk.modern.renting.vehicleservice.example.vehicle.request.ExampleVehicleRequest
 import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ExampleVehicleResponse
+import com.cdk.modern.renting.vehicleservice.metadata.BrandRepository
 import com.cdk.modern.renting.vehicleservice.metadata.ModelRepository
+import com.cdk.modern.renting.vehicleservice.metadata.TypeRepository
+import com.cdk.modern.renting.vehicleservice.vehicle.VehicleRepository
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
@@ -29,16 +32,19 @@ class ExampleVehicleControllerIntegrationTest extends Specification {
     WebTestClient webTestClient
 
     @SpringBean
-    ExampleVehicleRepository vehicleRepository = Mock()
+    ExampleCustomVehicleRepository exampleCustomVehicleRepository = Mock()
+
+    @SpringBean
+    VehicleRepository vehicleRepository = Mock()
 
     @SpringBean
     ModelRepository modelRepository = Mock()
 
     @SpringBean
-    ExampleTypeRepository typeRepository = Mock()
+    TypeRepository typeRepository = Mock()
 
     @SpringBean
-    ExampleBrandRepository brandRepository = Mock()
+    BrandRepository brandRepository = Mock()
 
     def baseUrl = "/example/vehicles";
 
@@ -62,7 +68,7 @@ class ExampleVehicleControllerIntegrationTest extends Specification {
 
     def "when 'getVehicleById' is performed then the response has a 200 status"() {
         given: "A user needs to retrieve the vehicle details"
-        vehicleRepository.findVehicleById(_ as UUID) >> mockedVehicleMono
+        exampleCustomVehicleRepository.findVehicleById(_ as UUID) >> mockedVehicleMono
         def url = baseUrl + "/" + UUID.randomUUID().toString()
 
         when: "Accessing the getVehicleById endpoint"
