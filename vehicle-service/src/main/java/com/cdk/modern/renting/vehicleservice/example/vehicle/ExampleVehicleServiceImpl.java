@@ -11,6 +11,8 @@ import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ExampleTyp
 import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ExampleVehicleResponse;
 import java.util.Optional;
 import java.util.UUID;
+
+import com.cdk.modern.renting.vehicleservice.metadata.ModelRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -30,7 +32,7 @@ public class ExampleVehicleServiceImpl implements ExampleVehicleService {
 
   private final ExampleVehicleRepository vehicleRepository;
   private final ExampleBrandRepository brandRepository;
-  private final ExampleModelRepository modelRepository;
+  private final ModelRepository modelRepository;
   private final ExampleTypeRepository typeRepository;
 
   @Override
