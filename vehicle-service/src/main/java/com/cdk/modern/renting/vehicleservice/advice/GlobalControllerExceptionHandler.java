@@ -71,7 +71,7 @@ public class GlobalControllerExceptionHandler {
         new ResponseEntity<>(
             ErrorResponse.builder().errors(errors).build(),
             new HttpHeaders(),
-            HttpStatus.BAD_REQUEST));
+            HttpStatus.CONFLICT));
   }
 
   @ExceptionHandler({DataRetrievalFailureException.class, NoSuchElementException.class})
