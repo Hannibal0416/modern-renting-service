@@ -23,7 +23,7 @@ spring:
   liquibase:
     contexts: docker
     change-log: classpath:db/changelog/db.changelog-master.xml
-    url:  jdbc:postgresql://localhost:5432/userdb
+    url:  jdbc:postgresql://postgres:5432/userdb
     user: postgres
     password: postgres
 
