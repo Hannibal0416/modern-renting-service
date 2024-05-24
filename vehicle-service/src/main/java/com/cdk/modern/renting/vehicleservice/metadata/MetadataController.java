@@ -31,6 +31,7 @@ import reactor.core.publisher.Mono;
 public class MetadataController {
 
     private final ModelService modelService;
+    private final TypeService typeService;
 
     @Operation(summary = "Get types", description = "Returns all types")
     @ApiResponses(value = {
@@ -40,7 +41,7 @@ public class MetadataController {
     })
     @GetMapping(value = "type", produces = "application/json")
     Flux<TypeResponse> getTypes() {
-        return null;
+        return typeService.getTypes();
     }
 
     @Operation(summary = "Get brands", description = "Returns all brands")

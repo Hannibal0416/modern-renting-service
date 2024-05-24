@@ -23,4 +23,11 @@ spring:
   liquibase:
     contexts: docker
     change-log: classpath:db/changelog/db.changelog-master.xml
+    url:  jdbc:postgresql://localhost:5432/userdb
+    user: postgres
+    password: postgres
 
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui/index.html
