@@ -67,14 +67,15 @@ public class MetadataController {
     @GetMapping(value = "type-brand", produces = "application/json")
     Mono<TypeBrandResponse> getTypeAndBrands() {
         // TODO: need to create&move to TypeBrandService interface/class, plus its unit test
-        return typeService.getTypes().collectList()
-                .zipWith(brandService.getBrands().collectList())
-                .map(tuple -> {
-                    TypeBrandResponse response = new TypeBrandResponse();
-                    response.setType(tuple.getT1());
-                    response.setBrand(tuple.getT2());
-                    return response;
-                });
+//        return typeService.getTypes().collectList()
+//                .zipWith(brandService.getBrands().collectList())
+//                .map(tuple -> {
+//                    TypeBrandResponse response = new TypeBrandResponse();
+//                    response.setType(tuple.getT1());
+//                    response.setBrand(tuple.getT2());
+//                    return response;
+//                });
+        return null;
     }
 
     @Operation(summary = "Find model by filter", description = "Returns models after filter")
