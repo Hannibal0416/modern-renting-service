@@ -5,8 +5,10 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+@Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ExampleCustomVehicleRepositoryImpl implements ExampleCustomVehicleRepository {
 
