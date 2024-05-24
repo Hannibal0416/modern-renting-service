@@ -39,7 +39,7 @@ class BrandTest extends Specification {
     def "when findAllBrands is called, it should receive positive response"() {
         given: "A user need to retrieve list of brands"
         when: "Endpoint gets called"
-        def httpResponseve = client.get().uri(baseUrl).exchange()
+        def httpResponse = client.get().uri(baseUrl).exchange()
 
         then: "Response received should be 200 OK with 2 objects"
         verifyAll(httpResponse) {
