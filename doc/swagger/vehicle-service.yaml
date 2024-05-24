@@ -4,7 +4,7 @@ info:
   description: SpringBoot 3.x application
   version: v0.0.1
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8082
     description: Generated server url
 security:
   - BearerAuthentication: []
@@ -511,7 +511,8 @@ components:
         imageUri:
           type: string
         rentPrice:
-          type: string
+          type: integer
+          format: int32
         name:
           type: string
         color:
@@ -540,6 +541,8 @@ components:
       type: object
       properties:
         modelId:
+          maximum: 999999
+          minimum: 1
           type: integer
           format: int32
         imageUri:
@@ -736,15 +739,21 @@ components:
       type: object
       properties:
         typeId:
-          type: string
-          example: '100001'
+          type: integer
+          format: int32
+          example: 100001
         brandId:
-          type: string
-          example: '100001'
+          type: integer
+          format: int32
+          example: 100001
         modelName:
           maxLength: 255
           type: string
           example: Cayenne
+        modelId:
+          maxLength: 255
+          type: string
+          example: '1'
         name:
           maxLength: 255
           type: string
