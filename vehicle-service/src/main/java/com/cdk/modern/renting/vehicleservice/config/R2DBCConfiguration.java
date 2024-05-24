@@ -24,18 +24,7 @@ import org.springframework.transaction.reactive.TransactionalOperator;
 
 @Configuration
 class R2DBCConfiguration {
-  @Bean
-  public ConnectionFactory connectionFactory(R2DBCConfigurationProperties properties) {
-    ConnectionFactoryOptions baseOptions = ConnectionFactoryOptions.parse(properties.getUrl());
-    Builder ob = ConnectionFactoryOptions.builder().from(baseOptions);
-    if (!StringUtil.isNullOrEmpty(properties.getUsername())) {
-      ob = ob.option(ConnectionFactoryOptions.USER, properties.getUsername());
-    }
-    if (!StringUtil.isNullOrEmpty(properties.getPassword())) {
-      ob = ob.option(ConnectionFactoryOptions.PASSWORD, properties.getPassword());
-    }
-    return ConnectionFactories.get(ob.build());
-  }
+
   @Bean
   public ReactiveTransactionManager reactiveTransactionManager(ConnectionFactory connectionFactory) {
     return new R2dbcTransactionManager(connectionFactory);

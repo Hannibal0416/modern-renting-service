@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8082
 
 oauth2:
   clientId: service-client
@@ -10,21 +10,22 @@ spring:
   config:
     activate:
       on-profile: test
-  h2:
-    console:
-      path: /h2-console
-      enabled: true
-
   application:
     name: oauth2
-  datasource:
-    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
-    username: sa
-    password: sa
-    driver-class-name: org.h2.Driver
-  jpa:
-    show-sql: true
+  r2dbc:
+    url: r2dbc:h2:file:///./testdb;MODE=PostgreSQL;
+    username: postgres
+    password: postgres
   liquibase:
     contexts: dev
     change-log: classpath:db/changelog/db.changelog-master.xml
+    url: jdbc:h2:file:./testdb;MODE=PostgreSQL;
+    user: postgres
+    password: postgres
+
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui/index.html
 

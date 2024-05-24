@@ -13,10 +13,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.UUID;
+import java.util.stream.IntStream;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -142,5 +145,21 @@ public class VehicleController {
   public Mono<VehicleResponse> update(
       @PathVariable UUID id, @Valid @RequestBody UpdateVehicleRequest request) {
     return null;
+  }
+
+  @GetMapping(value = "getFlux", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+  public Flux<VehicleResponse> getflux() {
+      Flux<VehicleResponse> strings = Flux.fromStream(IntStream.of(1,2,3,4,5).mapToObj( i -> {
+          try {
+              Thread.sleep(1000);
+          } catch (InterruptedException e) {
+              throw new RuntimeException(e);
+          }
+          VehicleResponse response = new VehicleResponse();
+          response.setName("flux" + i);
+          return response;
+      }));
+
+      return strings;
   }
 }
