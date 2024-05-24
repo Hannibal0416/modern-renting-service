@@ -83,6 +83,6 @@ public class GlobalControllerExceptionHandler {
         new ResponseEntity<>(
             ErrorResponse.builder().errors(errors).build(),
             new HttpHeaders(),
-            HttpStatus.BAD_REQUEST));
+            HttpStatus.NOT_FOUND));
   }
 }
