@@ -30,21 +30,37 @@ services:
     networks:
       - db
 
-  user:
-    image: eclipse-temurin:21-jdk
+  nginx:
     restart: always
-    command: "tail -f /dev/null"
+    build: ./nginx
+    ports:
+      - "8080:80"
+    networks:
+      - proxy
+      - backend
+    depends_on:
+      user:
+        condition: service_started
+      oauth2:
+        condition: service_started
+      vehicle:
+        condition: service_started
+
+  user:
+    build: ./user-service
+    # restart: always
     depends_on:
       postgres:
         condition: service_healthy
+      oauth2:
+        condition: service_started
     networks:
       - db
       - backend
 
   oauth2:
-    image: eclipse-temurin:21-jdk
-    restart: always
-    command: "tail -f /dev/null"
+    build: ./oauth2
+    # restart: always
     depends_on:
       postgres:
         condition: service_healthy
@@ -53,12 +69,13 @@ services:
       - backend
 
   vehicle:
-    image: eclipse-temurin:21-jdk
-    restart: always
-    command: "tail -f /dev/null"
+    build: ./vehicle-service
+    # restart: always
     depends_on:
       postgres:
         condition: service_healthy
+      oauth2:
+        condition: service_started
     networks:
       - db
       - backend
