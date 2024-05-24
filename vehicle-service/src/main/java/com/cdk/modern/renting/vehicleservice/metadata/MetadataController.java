@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RestController
 @Tag(name="Metadata")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -32,6 +34,7 @@ public class MetadataController {
 
     private final ModelService modelService;
     private final TypeService typeService;
+    private final BrandService brandService;
 
     @Operation(summary = "Get types", description = "Returns all types")
     @ApiResponses(value = {
@@ -52,7 +55,7 @@ public class MetadataController {
     })
     @GetMapping(value = "brand", produces = "application/json")
     Flux<BrandResponse> getBrands() {
-        return null;
+        return brandService.getBrands();
     }
 
     @Operation(summary = "Get types and brands", description = "Returns all types and brands")
@@ -63,7 +66,15 @@ public class MetadataController {
     })
     @GetMapping(value = "type-brand", produces = "application/json")
     Mono<TypeBrandResponse> getTypeAndBrands() {
-        return null;
+        // TODO: need to create&move to TypeBrandService interface/class, plus its unit test
+        return typeService.getTypes().collectList()
+                .zipWith(brandService.getBrands().collectList())
+                .map(tuple -> {
+                    TypeBrandResponse response = new TypeBrandResponse();
+                    response.setType(tuple.getT1());
+                    response.setBrand(tuple.getT2());
+                    return response;
+                });
     }
 
     @Operation(summary = "Find model by filter", description = "Returns models after filter")

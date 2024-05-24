@@ -380,6 +380,25 @@
 					"response": []
 				},
 				{
+					"name": "all brands",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/brand",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"brand"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "modelByFilters",
 					"request": {
 						"method": "GET",
