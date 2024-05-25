@@ -147,19 +147,4 @@ public class VehicleController {
     return null;
   }
 
-  @GetMapping(value = "getFlux", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-  public Flux<VehicleResponse> getflux() {
-      Flux<VehicleResponse> strings = Flux.fromStream(IntStream.of(1,2,3,4,5).mapToObj( i -> {
-          try {
-              Thread.sleep(1000);
-          } catch (InterruptedException e) {
-              throw new RuntimeException(e);
-          }
-          VehicleResponse response = new VehicleResponse();
-          response.setName("flux" + i);
-          return response;
-      }));
-
-      return strings;
-  }
 }
