@@ -465,6 +465,45 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Update vehicle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "xwk3z0RwvNfd1hw8FI4C5NhHH6ZlqaLH74sr2hC2M4WSJNcyfhohvRHcMQUfYlf2ZGAhUzGesaXXZdR8lYWM-jsvy61UeZvFoSgjcVo54f8BciOHoAOCtX6x4ua2Mnne",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"modelId\": 1,\r\n    \"imageUri\": \"string\",\r\n    \"name\": \"string\",\r\n    \"rentPrice\": 1000,\r\n    \"color\": \"string\",\r\n    \"productionYear\": 1970,\r\n    \"seatCount\": 1,\r\n    \"transmission\": \"string\",\r\n    \"fuelType\": \"string\",\r\n    \"active\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/vehicle/{{uuid}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"vehicle",
+								"{{uuid}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

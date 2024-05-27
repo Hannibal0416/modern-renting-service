@@ -74,8 +74,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized - Token is invalid
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
@@ -403,6 +403,7 @@ components:
         - active
         - modelId
         - name
+        - rentPrice
       type: object
       properties:
         modelId:
