@@ -13,17 +13,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.WebExchangeBindException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -141,10 +136,10 @@ public class VehicleController {
             }),
       })
   @PutMapping(value = "vehicle/{id}", produces = "application/json", consumes = "application/json")
-  //  @PreAuthorize("hasAnyAuthority('WRITE')")
+  @PreAuthorize("hasAnyAuthority('WRITE')")
   public Mono<VehicleResponse> update(
-      @PathVariable UUID id, @Valid @RequestBody UpdateVehicleRequest request) {
-    return null;
+      @PathVariable UUID id, @Valid @RequestBody Mono<UpdateVehicleRequest> requestMono) {
+    return requestMono.flatMap(
+        updateVehicleRequest -> vehicleService.update(id, updateVehicleRequest));
   }
-
 }

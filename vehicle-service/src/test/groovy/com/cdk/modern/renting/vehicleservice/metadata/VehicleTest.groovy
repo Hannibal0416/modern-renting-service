@@ -1,8 +1,11 @@
 package com.cdk.modern.renting.vehicleservice.metadata
 
-
+import com.cdk.modern.renting.vehicleservice.domain.Vehicle
+import com.cdk.modern.renting.vehicleservice.vehicle.VehicleRepository
 import com.cdk.modern.renting.vehicleservice.vehicle.request.CreateVehicleRequest
+import com.cdk.modern.renting.vehicleservice.vehicle.request.UpdateVehicleRequest
 import com.cdk.modern.renting.vehicleservice.vehicle.response.VehicleResponse
+import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
@@ -90,6 +93,133 @@ class VehicleTest extends Specification {
         then: "Should have a 401 response status"
         verifyAll(responseSpec) {
             responseSpec.expectStatus().is4xxClientError()
+        }
+
+    }
+}
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWebTestClient
+@ActiveProfiles("test")
+class VehicleUpdateTest extends Specification {
+
+    @Autowired
+    WebTestClient webTestClient
+
+    UUID uuid
+    String updateUrl
+
+    @SpringBean
+    VehicleRepository vehicleRepository = Mock()
+
+    def setup() {
+        uuid = UUID.randomUUID()
+        updateUrl = "/vehicle/${uuid}"
+    }
+
+    @WithMockUser(authorities = "WRITE")
+    def "when 'PutVehicle' is performed then the response should have a 201 status"() {
+        given: "Update vehicle request: name: #name, modelId: #modelId, rentPrice: #rentPrice"
+        def request = new UpdateVehicleRequest()
+        request.name = name
+        request.modelId = modelId
+        request.rentPrice = rentPrice
+
+        and: "An existing vehicle"
+        def vehicle = new Vehicle(id: uuid, name: "oldName", modelId: 1, rentPrice: 1000)
+
+        and: "VehicleRepository that return existing vehicle and save it"
+        vehicleRepository.findById(uuid) >> Mono.just(vehicle)
+        vehicleRepository.save(vehicle) >> Mono.just(vehicle)
+
+        when: "Access 'PutVehicle'"
+        def responseSpec = webTestClient.put().uri(updateUrl)
+                .body(Mono.just(request), UpdateVehicleRequest).exchange()
+
+        then: "Should have a 201 response status"
+        verifyAll(responseSpec) {
+            responseSpec.expectStatus().is2xxSuccessful()
+            responseSpec.expectBody(VehicleResponse).consumeWith {
+                result ->
+                    {
+                        assert result.responseBody.name == name
+                        assert result.responseBody.rentPrice == rentPrice
+                    }
+            }
+        }
+
+        where: "Should have a 201 response status"
+        name          | modelId | rentPrice
+        "newVehicle1" | 1       | 1500
+        "newVehicle2" | 2       | 2000
+        "newVehicle3" | 3       | 3000
+    }
+
+
+    @WithMockUser(authorities = "WRITE")
+    def "when 'PutVehicle' is performed then the response should have a 400 status"() {
+        given: "Update vehicle request: name: #name, modelId: #modelId, rentPrice: #rentPrice"
+        def request = new UpdateVehicleRequest()
+        request.name = name
+        request.modelId = modelId
+        request.rentPrice = rentPrice
+
+        when: "Access 'PutVehicle'"
+        def responseSpec = webTestClient.put().uri(updateUrl)
+                .body(Mono.just(request), UpdateVehicleRequest).exchange()
+
+        then:
+        verifyAll(responseSpec) {
+            responseSpec.expectStatus().isBadRequest()
+        }
+
+
+        where: "Should have a 400 response status"
+        name          | modelId | rentPrice
+        "nv"          | 1       | 1500
+        "newVehicle2" | 0       | 2000
+        "newVehicle3" | 3       | null
+        null          | 4       | 1000
+    }
+
+    @WithMockUser(authorities = "WRITE")
+    def "when 'PutVehicle' is performed without existing vehicle then the response should have a 404 status"() {
+        given: "Update vehicle request: name: #name, modelId: #modelId, rentPrice: #rentPrice"
+        def request = new UpdateVehicleRequest()
+        request.name = name
+        request.modelId = modelId
+        request.rentPrice = rentPrice
+
+        and: "VehicleRepository that cannot find existing vehicle"
+        vehicleRepository.findById(uuid) >> Mono.empty()
+
+        when: "Access 'PutVehicle'"
+        def responseSpec = webTestClient.put().uri(updateUrl)
+                .body(Mono.just(request), UpdateVehicleRequest).exchange()
+
+        then: "Should have a 404 response status"
+        verifyAll(responseSpec) {
+            responseSpec.expectStatus().isNotFound()
+        }
+
+        where:
+        name          | modelId | rentPrice
+        "newVehicle1" | 1       | 1500
+        "newVehicle2" | 2       | 2000
+        "newVehicle3" | 3       | 3000
+    }
+
+    def "when 'PutVehicle' is performed without authorities then the response should have a 403 status"() {
+        given: "Update vehicle request: name: #name, modelId: #modelId, rentPrice: #rentPrice"
+        def request = new UpdateVehicleRequest()
+
+        when: "Access 'PutVehicle'"
+        def responseSpec = webTestClient.put().uri(updateUrl)
+                .body(Mono.just(request), UpdateVehicleRequest).exchange()
+
+        then: "Should have a 403 response status"
+        verifyAll(responseSpec) {
+            responseSpec.expectStatus().isForbidden()
         }
 
     }

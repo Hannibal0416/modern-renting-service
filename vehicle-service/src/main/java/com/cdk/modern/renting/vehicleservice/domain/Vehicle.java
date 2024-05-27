@@ -19,7 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table
 public class Vehicle {
-//    @Id
+    @Id
     protected UUID id;
 //    @Id
     @Column
