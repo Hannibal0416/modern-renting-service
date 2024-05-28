@@ -5,8 +5,6 @@ import com.cdk.modern.renting.vehicleservice.domain.Model
 import com.cdk.modern.renting.vehicleservice.domain.Type
 import com.cdk.modern.renting.vehicleservice.metadata.request.CreateModelRequest
 import com.cdk.modern.renting.vehicleservice.metadata.response.ModelResponse
-import com.cdk.modern.renting.vehicleservice.vehicle.request.CreateVehicleRequest
-import com.cdk.modern.renting.vehicleservice.vehicle.response.VehicleResponse
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
