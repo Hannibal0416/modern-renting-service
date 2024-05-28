@@ -8,6 +8,8 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 public interface VehicleService {
+  Mono<VehicleResponse> get(UUID id);
+
   Mono<VehicleResponse> create(Mono<CreateVehicleRequest> request);
 
   Mono<VehicleResponse> update(UUID id, UpdateVehicleRequest request);

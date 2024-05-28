@@ -52,8 +52,9 @@ public class VehicleController {
             })
       })
   @GetMapping(value = "vehicle/{id}", produces = "application/json")
+  @PreAuthorize("hasAnyAuthority('READ')")
   public Mono<VehicleResponse> getVehicle(@PathVariable UUID id) {
-    return null;
+      return vehicleService.get(id);
   }
 
   @Operation(

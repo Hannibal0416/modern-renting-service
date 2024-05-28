@@ -1,6 +1,7 @@
 package com.cdk.modern.renting.vehicleservice.metadata
 
 import com.cdk.modern.renting.vehicleservice.domain.Vehicle
+import com.cdk.modern.renting.vehicleservice.vehicle.CustomVehicleRepository
 import com.cdk.modern.renting.vehicleservice.vehicle.VehicleRepository
 import com.cdk.modern.renting.vehicleservice.vehicle.request.CreateVehicleRequest
 import com.cdk.modern.renting.vehicleservice.vehicle.request.UpdateVehicleRequest
@@ -222,5 +223,77 @@ class VehicleUpdateTest extends Specification {
             responseSpec.expectStatus().isForbidden()
         }
 
+    }
+}
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWebTestClient
+@ActiveProfiles("test")
+class VehicleReadTest extends Specification {
+    @Autowired
+    WebTestClient webTestClient
+
+    UUID uuid
+    String readUrl
+
+    @SpringBean
+    CustomVehicleRepository customVehicleRepository = Mock()
+
+    def setup() {
+        uuid = UUID.randomUUID()
+        readUrl = "/vehicle"
+    }
+
+    @WithMockUser(authorities = "READ")
+    def "when 'ReadVehicle' is performed then the response should have a 200 status" () {
+        given: "Read vehicle request"
+        def vehicle = new Vehicle(id: uuid, name: "test1", modelId: 1, rentPrice: 1000)
+        and: "VehicleRepository that return existing vehicle"
+        customVehicleRepository.findVehicleById(uuid) >> Mono.just(vehicle)
+
+        when: "Access 'ReadVehicle'"
+        def responseSpec = webTestClient.get().uri("${readUrl}/${uuid}").exchange()
+
+        then: "Should have a 200 response status"
+        verifyAll(responseSpec) {
+            responseSpec.expectStatus().is2xxSuccessful()
+            responseSpec.expectBody(VehicleResponse).consumeWith {
+                result ->
+                    {
+                        assert result.responseBody.id == vehicle.getId()
+                        assert result.responseBody.name == vehicle.getName()
+                    }
+            }
+        }
+
+        where:
+        name          | modelId | rentPrice
+        "test1"       | 1       | 1000
+    }
+
+    @WithMockUser(authorities = "READ")
+    def "when 'ReadVehicle' is performed without existing vehicle then the response should have a 404 status"() {
+        given: "Read vehicle request"
+        and: "VehicleRepository that cannot find existing vehicle"
+        customVehicleRepository.findVehicleById(uuid) >> Mono.empty()
+
+        when: "Access 'ReadVehicle'"
+        def responseSpec = webTestClient.get().uri("${readUrl}/${uuid}").exchange()
+
+        then: "Should have a 404 response status"
+        verifyAll(responseSpec) {
+            responseSpec.expectStatus().isNotFound()
+        }
+    }
+
+    def "when 'ReadVehicle' is performed without authorities then the response should have a 403 status"() {
+        given: "Read vehicle request"
+        when: "Access 'ReadVehicle'"
+        def responseSpec = webTestClient.get().uri("${readUrl}/${uuid}").exchange()
+
+        then: "Should have a 403 response status"
+        verifyAll(responseSpec) {
+            responseSpec.expectStatus().isForbidden()
+        }
     }
 }
