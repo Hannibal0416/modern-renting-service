@@ -5,7 +5,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 CREATE TABLE IF NOT EXISTS vehicle (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    model_id INTEGER NOT NULL,
+    model_id INTEGER NOT NULL REFERENCES vehicle_model(id),
     image_uri VARCHAR,
     rent_price BIGINT NOT NULL DEFAULT 0,
     active BOOLEAN NOT NULL DEFAULT TRUE,
