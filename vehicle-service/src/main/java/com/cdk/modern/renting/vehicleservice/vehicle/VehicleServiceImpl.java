@@ -1,6 +1,9 @@
 package com.cdk.modern.renting.vehicleservice.vehicle;
 
 import com.cdk.modern.renting.vehicleservice.domain.Vehicle;
+import com.cdk.modern.renting.vehicleservice.metadata.response.ModelResponse;
+import com.cdk.modern.renting.vehicleservice.metadata.response.BrandResponse;
+import com.cdk.modern.renting.vehicleservice.metadata.response.TypeResponse;
 import com.cdk.modern.renting.vehicleservice.vehicle.request.CreateVehicleRequest;
 import com.cdk.modern.renting.vehicleservice.vehicle.request.UpdateVehicleRequest;
 import com.cdk.modern.renting.vehicleservice.vehicle.response.VehicleResponse;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -22,7 +26,43 @@ public class VehicleServiceImpl implements VehicleService {
 
   private final VehicleRepository vehicleRepository;
 
+  private final CustomVehicleRepository customVehicleRepository;
+
   private final TransactionalOperator transactionalOperator;
+
+    @Override
+    public Mono<VehicleResponse> get(UUID id) {
+        return customVehicleRepository
+                .findVehicleById(id)
+                .switchIfEmpty(Mono.error(new DataRetrievalFailureException("Not Found")))
+                .map(Optional::of)
+                .flatMap(
+                        optionalVehicle -> {
+                            VehicleResponse vehicleResponse = new VehicleResponse();
+                            ModelResponse modelResponse = new ModelResponse();
+                            BrandResponse brandResponse = new BrandResponse();
+                            TypeResponse typeResponse = new TypeResponse();
+                            optionalVehicle.ifPresent(
+                                    vehicle -> {
+                                        BeanUtils.copyProperties(vehicle, vehicleResponse);
+                                        Optional.ofNullable(vehicle.getModel())
+                                                .ifPresent(
+                                                        model -> {
+                                                            BeanUtils.copyProperties(model, modelResponse);
+                                                            Optional.ofNullable(model.getBrand())
+                                                                    .ifPresent(
+                                                                            brand -> BeanUtils.copyProperties(brand, brandResponse));
+                                                            Optional.ofNullable(model.getType())
+                                                                    .ifPresent(type -> BeanUtils.copyProperties(type, typeResponse));
+                                                        });
+                                    });
+
+                            modelResponse.setBrand(brandResponse);
+                            modelResponse.setType(typeResponse);
+                            vehicleResponse.setModel(modelResponse);
+                            return Mono.just(vehicleResponse);
+                        });
+    }
 
   @Override
   public Mono<VehicleResponse> create(Mono<CreateVehicleRequest> requestMono) {
