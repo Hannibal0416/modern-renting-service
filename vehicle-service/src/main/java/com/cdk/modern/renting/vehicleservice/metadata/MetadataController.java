@@ -34,6 +34,7 @@ public class MetadataController {
     private final ModelService modelService;
     private final TypeService typeService;
     private final BrandService brandService;
+    private final TypeBrandService typeBrandService;
 
     @Operation(summary = "Get types", description = "Returns all types")
     @ApiResponses(value = {
@@ -65,15 +66,7 @@ public class MetadataController {
     })
     @GetMapping(value = "type-brand", produces = "application/json")
     Mono<TypeBrandResponse> getTypeAndBrands() {
-        // TODO: need to create&move to TypeBrandService interface/class, plus its unit test
-        return typeService.getTypes().collectList()
-                .zipWith(brandService.getBrands().collectList())
-                .map(tuple -> {
-                    TypeBrandResponse response = new TypeBrandResponse();
-                    response.setType(tuple.getT1());
-                    response.setBrand(tuple.getT2());
-                    return response;
-                });
+        return typeBrandService.getTypeBrand();
     }
 
     @Operation(summary = "Find model by filter", description = "Returns models after filter")
