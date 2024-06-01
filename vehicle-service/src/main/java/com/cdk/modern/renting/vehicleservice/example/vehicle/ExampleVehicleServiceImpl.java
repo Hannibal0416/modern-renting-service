@@ -16,6 +16,7 @@ import com.cdk.modern.renting.vehicleservice.metadata.BrandRepository;
 import com.cdk.modern.renting.vehicleservice.metadata.ModelRepository;
 import com.cdk.modern.renting.vehicleservice.metadata.TypeRepository;
 import com.cdk.modern.renting.vehicleservice.vehicle.VehicleRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -74,6 +75,7 @@ public class ExampleVehicleServiceImpl implements ExampleVehicleService {
   }
 
   @Override
+  @CircuitBreaker(name="cloudBinderService")
   public Flux<ExampleVehicleResponse> findAll(Integer offset, Integer limit) {
     Pageable pageable = PageRequest.of(offset, limit, Sort.by("createdAt"));
     return vehicleRepository
@@ -85,6 +87,7 @@ public class ExampleVehicleServiceImpl implements ExampleVehicleService {
               return Mono.just(response);
             });
   }
+
 
   @Override
   //  @Transactional(rollbackFor = Exception.class)  //Option{name='readOnly', sensitive=false} +

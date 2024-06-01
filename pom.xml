@@ -54,6 +54,7 @@
     <postgres.version>42.7.3</postgres.version>
     <guava.version>33.2.0-jre</guava.version>
     <r2dbc-postgresql.version>1.0.5.RELEASE</r2dbc-postgresql.version>
+    <resilience4j.version>2.2.0</resilience4j.version>
   </properties>
 
   <modules>
@@ -137,6 +138,21 @@
         <groupId>org.postgresql</groupId>
         <artifactId>r2dbc-postgresql</artifactId>
         <version>${r2dbc-postgresql.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.resilience4j</groupId>
+        <artifactId>resilience4j-spring-boot3</artifactId>
+        <version>${resilience4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.resilience4j</groupId>
+        <artifactId>resilience4j-bulkhead</artifactId>
+        <version>${resilience4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.resilience4j</groupId>
+        <artifactId>resilience4j-reactor</artifactId>
+        <version>${resilience4j.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

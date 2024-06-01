@@ -5,6 +5,7 @@ import com.cdk.modern.renting.vehicleservice.domain.Vehicle;
 import com.cdk.modern.renting.vehicleservice.example.vehicle.request.ExampleCreateVehicleRequest;
 import com.cdk.modern.renting.vehicleservice.example.vehicle.request.ExampleVehicleRequest;
 import com.cdk.modern.renting.vehicleservice.example.vehicle.response.ExampleVehicleResponse;
+import com.cdk.modern.renting.vehicleservice.vehicle.VehicleRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,15 +14,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.BaseStream;
 import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.stream.Streams;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +48,7 @@ import reactor.core.publisher.Mono;
 public class ExampleVehicleController {
 
   private final ExampleVehicleService vehicleService;
+  private final VehicleRepository vehicleRepository;
 
   @Operation(summary = "Get a vehicle by id", description = "Returns a vehicle")
   @ApiResponses(
@@ -126,4 +134,21 @@ public class ExampleVehicleController {
 
     return response;
   }
+
+  @GetMapping(value = "getFlux2", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+  public Flux<ExampleVehicleResponse> getFlux2() {
+      return vehicleRepository.findAll().collectList().map( vehicles ->  Flux.fromStream(vehicles.stream().map( vehicle -> {
+          ExampleVehicleResponse response = new ExampleVehicleResponse();
+          BeanUtils.copyProperties(vehicle, response);
+          try {
+              Thread.sleep(1000);
+          } catch (InterruptedException e) {
+              throw new RuntimeException(e);
+          }
+          return response;
+      }))).flatMapMany( m -> m);
+  }
+
+
+
 }

@@ -29,3 +29,41 @@ springdoc:
     enabled: true
     path: /swagger-ui/index.html
 
+management:
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      cors:
+        allowed-methods: "*"
+
+resilience4j:
+  circuitbreaker:
+    circuit-breaker-aspect-order: 1
+    configs:
+      default:
+        sliding-window-type: COUNT_BASED
+        failure-rate-threshold: 20
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 60s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        register-health-indicator: true
+    instances:
+      cloudBinderService:
+        base-config: default
+      signature-service:
+        base-config: default
+  bulkhead:
+    instances:
+      binders:
+        max-concurrent-calls: 10
+      document:
+        max-concurrent-calls: 10
