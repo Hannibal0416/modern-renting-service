@@ -361,6 +361,25 @@
 			"name": "Vehicle",
 			"item": [
 				{
+					"name": "all vehicles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/vehicles",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"vehicles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "all types",
 					"request": {
 						"method": "GET",
