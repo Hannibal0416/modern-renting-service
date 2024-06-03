@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.reactive.TransactionalOperator;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
@@ -63,6 +64,17 @@ public class VehicleServiceImpl implements VehicleService {
                             return Mono.just(vehicleResponse);
                         });
     }
+
+  @Override
+  public Flux<VehicleResponse> getAll() {
+      return vehicleRepository.findAll().flatMap(
+              each -> {
+                  VehicleResponse vehicleResponse = new VehicleResponse();
+                  BeanUtils.copyProperties(each, vehicleResponse);
+                  return Flux.just(vehicleResponse);
+              }
+      );
+  }
 
   @Override
   public Mono<VehicleResponse> create(Mono<CreateVehicleRequest> requestMono) {

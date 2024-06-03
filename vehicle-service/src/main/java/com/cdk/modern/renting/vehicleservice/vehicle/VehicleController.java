@@ -81,11 +81,12 @@ public class VehicleController {
             })
       })
   @GetMapping(value = "/vehicles", produces = "application/json")
+  @PreAuthorize("hasAnyAuthority('READ')")
   public Flux<VehicleResponse> getVehicles(
       @RequestParam(defaultValue = "0") Integer offset,
       @RequestParam(defaultValue = "50") Integer limit,
       @Valid FindVehiclesRequest request) {
-    return null;
+    return vehicleService.getAll();
   }
 
   @Operation(summary = "Create new vehicle", description = "Create new vehicle")
