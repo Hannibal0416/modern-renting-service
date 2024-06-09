@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import spock.lang.Specification
 
@@ -239,6 +240,9 @@ class VehicleReadTest extends Specification {
     @SpringBean
     CustomVehicleRepository customVehicleRepository = Mock()
 
+    @SpringBean
+    VehicleRepository vehicleRepository = Mock()
+
     def setup() {
         uuid = UUID.randomUUID()
         readUrl = "/vehicle"
@@ -290,6 +294,70 @@ class VehicleReadTest extends Specification {
         given: "Read vehicle request"
         when: "Access 'ReadVehicle'"
         def responseSpec = webTestClient.get().uri("${readUrl}/${uuid}").exchange()
+
+        then: "Should have a 403 response status"
+        verifyAll(responseSpec) {
+            responseSpec.expectStatus().isForbidden()
+        }
+    }
+
+    @WithMockUser(authorities = "READ")
+    def "when 'ReadVehicles' is performed then the response should have a 200 status"() {
+        given: "Read vehicles request"
+
+        vehicleRepository.findAll() >> Flux.just(
+            Vehicle.builder().name("vehicle1").build(),
+            Vehicle.builder().name("vehicle2").build()
+        )
+        readUrl = "/vehicles"
+
+        when: "Access 'ReadVehicles'"
+        def responseSpec = webTestClient.get().uri(readUrl).exchange()
+
+        then: "Should have a 200 response status with 2 vehicles"
+        verifyAll(responseSpec) {
+            responseSpec.expectStatus().is2xxSuccessful()
+            responseSpec.expectBody(List<VehicleResponse>).consumeWith {
+                result ->
+                    {
+                        def res = result.getResponseBody()
+                        assert res.size() == 2
+                    }
+            }
+        }
+    }
+
+    @WithMockUser(authorities = "READ")
+    def "when 'ReadVehicles' is performed without existing vehicle then the response should have a 200 status"() {
+        given: "Read vehicles request"
+        and: "VehicleRepository that cannot find existing vehicle"
+
+        vehicleRepository.findAll() >> Flux.empty()
+        readUrl = "/vehicles"
+
+        when: "Access 'ReadVehicles'"
+        def responseSpec = webTestClient.get().uri(readUrl).exchange()
+
+        then: "Should have a 200 response status with empty result"
+        verifyAll(responseSpec) {
+            responseSpec.expectStatus().is2xxSuccessful()
+            responseSpec.expectBody(List<VehicleResponse>).consumeWith {
+                result ->
+                    {
+                        def res = result.getResponseBody()
+                        assert res.size() == 0
+                    }
+            }
+        }
+    }
+
+    def "when 'ReadVehicles' is performed without authorities then the response should have a 403 status"() {
+        given: "Read vehicles request"
+
+        readUrl = "/vehicles"
+
+        when: "Access 'ReadVehicles'"
+        def responseSpec = webTestClient.get().uri(readUrl).exchange()
 
         then: "Should have a 403 response status"
         verifyAll(responseSpec) {
