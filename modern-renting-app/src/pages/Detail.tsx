@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "@/util/axios";
 
 interface CarDetails {
   id: string;
@@ -31,7 +31,7 @@ const SpecBlock = ({ value, title }: { value: string | number, title: string}) =
 }
 
 const fetchDetail = async (id: string): Promise<CarDetails> => {
-  const response = await axios.get<CarDetails>(`/vehicle/${id}`);
+  const response = await axios.get<CarDetails>(`/vehicles/api/vehicle/${id}`);
   return response.data;
 };
 

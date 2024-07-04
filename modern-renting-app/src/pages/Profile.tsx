@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import axios from 'axios'
+import axios from '@/util/axios'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from "react-router-dom"
 
@@ -21,7 +21,7 @@ type inputElProps = {
   onCancel: Function;
 };
 
-const InputEl: Reac.FC<inputElProps> = ({type, placeholder, value, onChange, onSave, onCancel}) => {
+const InputEl: React.FC<inputElProps> = ({type, placeholder, value, onChange, onSave, onCancel}) => {
 
   const _onChange = (e) => {
     onChange(e.target.value)
@@ -102,7 +102,7 @@ const Profile: React.FC = () => {
   }
 
   const save = async () => {
-    await axios.put('/users', { ...formUser })
+    await axios.put('/users/api/users', { ...formUser })
     .then(async (response) => {
       dispatch({
         type: 'UPDATE_DATA',

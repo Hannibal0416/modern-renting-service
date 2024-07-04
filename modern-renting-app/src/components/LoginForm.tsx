@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
+import axios from '@/util/axios';
 import { useDispatch } from 'react-redux'
 
 import appleLogo from "../assets/apple.png";
@@ -67,7 +67,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ open, closeModal }) => {
     }
 
     const getUser = async () => {
-      await axios.get('/users')
+      await axios.get('/users/api/users')
       .then(async (response) => {
         dispatch({
           type: 'GET_DATA',
@@ -78,7 +78,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ open, closeModal }) => {
     }
 
     const _onLogin = async () => {
-      await axios.post('/oauth2/token', { email, password })
+      await axios.post('/oauth2/api/oauth2/token', { email, password })
       .then(async (response) => {
         const { access_token } = response.data
 

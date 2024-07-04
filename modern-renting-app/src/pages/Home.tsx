@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import axios from '../util/axios';
+import axios from '@/util/axios';
 import compactImage from "../assets/compact.jpg";
 import sportCarImage from "../assets/sport-car.jpg";
 import welcabImage from "../assets/welcab.jpg";
@@ -40,7 +40,7 @@ const images: ImageMap = {
 };
 
 const fetchTypeBrand = async (): Promise<ApiResponse> => {
-  const response = await axios.get<ApiResponse>("/type-brand");
+  const response = await axios.get<ApiResponse>("/vehicles/api/type-brand");
   return response.data;
 };
 
@@ -66,7 +66,7 @@ const Home: React.FC = () => {
           >
             <img
               className="w-full h-48 object-cover"
-              src={images[model.name]}
+              src={model.imageUri}
               alt={model.name}
             />
             <div className="px-6 py-1">
